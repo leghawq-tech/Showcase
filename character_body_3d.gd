@@ -1,8 +1,8 @@
 extends CharacterBody3D
 
 const SPEED = 15
-const JUMP_VELOCITY = 14
-const MAX_JUMP_HEIGHT = 10
+const JUMP_VELOCITY = 17
+const MAX_JUMP_HEIGHT = 18
 
 # Separate gravity for rise and fall for more control
 const RISE_GRAVITY = 30.0
