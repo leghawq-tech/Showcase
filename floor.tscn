@@ -1,20 +1,17 @@
 [gd_scene format=3 uid="uid://858ofi73oqy5"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4xowi"]
-albedo_color = Color(0.23137255, 0.1254902, 1, 1)
+[sub_resource type="BoxShape3D" id="BoxShape3D_ryoud"]
+size = Vector3(1000, 0.1, 1000)
 
-[sub_resource type="BoxMesh" id="BoxMesh_4xowi"]
-material = SubResource("StandardMaterial3D_4xowi")
-size = Vector3(100, 1, 100)
+[sub_resource type="BoxMesh" id="BoxMesh_oj3tl"]
+size = Vector3(1000, 0.1, 1000)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_a202f"]
-size = Vector3(100, 1, 100)
+[node name="Node3D" type="Node3D" unique_id=1020688448]
 
-[node name="StaticBody3D" type="StaticBody3D" unique_id=282747308]
-metadata/_edit_group_ = true
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=484598236]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=10534082]
-mesh = SubResource("BoxMesh_4xowi")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=398076266]
+shape = SubResource("BoxShape3D_ryoud")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1149137115]
-shape = SubResource("BoxShape3D_a202f")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=547064052]
+mesh = SubResource("BoxMesh_oj3tl")

@@ -24,8 +24,11 @@ transform = Transform3D(1, 0, 0, 0, 0.9999709, 0.0076270155, 0, -0.0076270155, 0
 mesh = SubResource("CapsuleMesh_noarx")
 
 [node name="CameraPivot" type="Node3D" parent="." unique_id=1895780213]
+visible = false
 
 [node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot" unique_id=553808421]
+visible = false
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D" unique_id=1346322419]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.62255406, -0.3083949)
+visible = false
