@@ -1,14 +1,16 @@
 [gd_scene format=3 uid="uid://2e2dbgeb2mdr"]
 
-[ext_resource type="Script" uid="uid://1pkdpd7mw2pc" path="res://character_body_3dv2.gd" id="1_qsany"]
+[ext_resource type="Script" uid="uid://1pkdpd7mw2pc" path="res://player_movement_camera.gd" id="1_qsany"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a0tk4"]
+height = 1.92
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a202f"]
 albedo_color = Color(1, 0.21960784, 1, 1)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_noarx"]
 material = SubResource("StandardMaterial3D_a202f")
+height = 1.92
 
 [node name="Node3D" type="Node3D" unique_id=741141872]
 
@@ -24,11 +26,9 @@ transform = Transform3D(1, 0, 0, 0, 0.9999709, 0.0076270155, 0, -0.0076270155, 0
 mesh = SubResource("CapsuleMesh_noarx")
 
 [node name="CameraPivot" type="Node3D" parent="." unique_id=1895780213]
-visible = false
 
 [node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot" unique_id=553808421]
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5712763, 0)
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D" unique_id=1346322419]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.62255406, -0.3083949)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11605942, -0.33993208)
