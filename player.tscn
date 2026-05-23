@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://2e2dbgeb2mdr"]
 
-[ext_resource type="Script" uid="uid://1pkdpd7mw2pc" path="res://player_movement_camera.gd" id="1_qsany"]
+[ext_resource type="Script" uid="uid://jyjogxlirdy3" path="res://player.gd" id="1_4flbx"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a0tk4"]
 height = 1.92
@@ -12,23 +12,28 @@ albedo_color = Color(1, 0.21960784, 1, 1)
 material = SubResource("StandardMaterial3D_a202f")
 height = 1.92
 
-[node name="Node3D" type="Node3D" unique_id=741141872]
+[node name="Player" type="Node3D" unique_id=1392047774]
 
-[node name="Player" type="CharacterBody3D" parent="." unique_id=278713253]
-script = ExtResource("1_qsany")
+[node name="Model" type="CharacterBody3D" parent="." unique_id=278713253]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0747133, 0)
+script = ExtResource("1_4flbx")
 metadata/_edit_group_ = true
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Player" unique_id=1098769316]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Model" unique_id=1098769316]
 shape = SubResource("CapsuleShape3D_a0tk4")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Player" unique_id=266453819]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Model" unique_id=266453819]
 transform = Transform3D(1, 0, 0, 0, 0.9999709, 0.0076270155, 0, -0.0076270155, 0.9999709, 0, 0, 0)
 mesh = SubResource("CapsuleMesh_noarx")
 
-[node name="CameraPivot" type="Node3D" parent="." unique_id=1895780213]
+[node name="Ray01" type="RayCast3D" parent="Model" unique_id=308743524]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1.1669136, -0.0021899939)
 
-[node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot" unique_id=553808421]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5712763, 0)
+[node name="Ray02" type="RayCast3D" parent="Model" unique_id=217027152]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.99172103, -0.0021899939)
 
-[node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D" unique_id=1346322419]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11605942, -0.33993208)
+[node name="Head" type="Node3D" parent="Model" unique_id=1756501611]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.0747133, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Model/Head" unique_id=1346322419]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7620491, -0.33993208)
