@@ -15,7 +15,7 @@ height = 1.92
 [node name="Player" type="Node3D" unique_id=1392047774]
 
 [node name="Model" type="CharacterBody3D" parent="." unique_id=278713253]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0747133, 0)
+collision_layer = 2
 script = ExtResource("1_4flbx")
 metadata/_edit_group_ = true
 
@@ -26,14 +26,19 @@ shape = SubResource("CapsuleShape3D_a0tk4")
 transform = Transform3D(1, 0, 0, 0, 0.9999709, 0.0076270155, 0, -0.0076270155, 0.9999709, 0, 0, 0)
 mesh = SubResource("CapsuleMesh_noarx")
 
-[node name="Ray01" type="RayCast3D" parent="Model" unique_id=308743524]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1.1669136, -0.0021899939)
-
-[node name="Ray02" type="RayCast3D" parent="Model" unique_id=217027152]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.99172103, -0.0021899939)
-
 [node name="Head" type="Node3D" parent="Model" unique_id=1756501611]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.0747133, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+
+[node name="RayFacingWall" type="RayCast3D" parent="Model/Head" unique_id=217027152]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5548513, -0.23983869)
+target_position = Vector3(0, 0, -0.7)
+
+[node name="LegdeChecker" type="RayCast3D" parent="Model/Head" unique_id=55210179]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3523122, -0.23983869)
+target_position = Vector3(0, 0, -1.065)
+
+[node name="LedgeFloorChecker" type="RayCast3D" parent="Model/Head/LegdeChecker" unique_id=1648171048]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.0218344)
+target_position = Vector3(0, -2, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Model/Head" unique_id=1346322419]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7620491, -0.33993208)
