@@ -16,26 +16,36 @@ const BOB_AMP = 0.03
 var t_bob = 0.0
 var is_climbing: bool = false
 var camera_base_pos := Vector3.ZERO
+var crouch_cam_offset: float = 0.0
 
 #fov variables
 const BASE_FOV = 70.0
 const FOV_CHANGE = 1.5
 
+# Crouch variables
+const CROUCH_SPEED = 3.0
+const CROUCH_HEIGHT = 1.0
+const STAND_HEIGHT = 1.92
+const CROUCH_CAM_Y = 0.0
+const STAND_CAM_Y = 0.6
+
+var is_crouching: bool = false
+var is_first_person = true
+
 @onready var head = $Head
 @onready var camera = $Head/Camera3D
 @onready var wall_ray = $Head/RayFacingWall
 @onready var ledge_check = $Head/LegdeChecker
-@onready var ledge_floor_check = $Head/LegdeChecker/LedgeFloorChecker  # Added new downward ray
-var is_first_person = true
+@onready var ledge_floor_check = $Head/LegdeChecker/LedgeFloorChecker
+@onready var collision = $CollisionShape3D
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	camera_base_pos = camera.transform.origin
-	
+
 func _unhandled_input(event):
 	if is_climbing:
 		return
-		
 	if event is InputEventMouseMotion:
 		head.rotate_y(-event.relative.x * SENSITIVITY)
 		camera.rotate_x(-event.relative.y * SENSITIVITY)
@@ -60,10 +70,16 @@ func _physics_process(delta):
 			start_ledge_climb()
 			return
 
-	# Handle Sprint.
-	if Input.is_action_pressed("sprint"):
+	# Handle Crouch
+	if Input.is_action_just_pressed("crouch"):
+		crouch()
+	elif Input.is_action_just_released("crouch"):
+		uncrouch()
+
+	# Handle Sprint
+	if Input.is_action_pressed("sprint") and not is_crouching:
 		speed = SPRINT_SPEED
-	else:
+	elif not is_crouching:
 		speed = WALK_SPEED
 
 	# Get the input direction and handle the movement/deceleration.
@@ -83,7 +99,7 @@ func _physics_process(delta):
 	
 	# Head bob
 	t_bob += delta * velocity.length() * float(is_on_floor())
-	camera.transform.origin = camera_base_pos + _headbob(t_bob)
+	camera.transform.origin = camera_base_pos + _headbob(t_bob) + Vector3(0, crouch_cam_offset, 0)
 	
 	# FOV
 	var velocity_clamped = clamp(velocity.length(), 0.5, SPRINT_SPEED * 2)
@@ -91,7 +107,6 @@ func _physics_process(delta):
 	camera.fov = lerp(camera.fov, target_fov, delta * 8.0)
 	
 	move_and_slide()
-
 
 func _headbob(time) -> Vector3:
 	var pos = Vector3.ZERO
@@ -102,7 +117,6 @@ func _headbob(time) -> Vector3:
 # --- LEDGE CLIMBING LOGIC ---
 
 func check_for_ledge() -> bool:
-	# Check if chest hits a wall, head space is clear, AND the downward ray finds a surface to stand on
 	if wall_ray.is_colliding() and not ledge_check.is_colliding():
 		if ledge_floor_check.is_colliding():
 			return true
@@ -114,39 +128,47 @@ func start_ledge_climb() -> void:
 
 	var wall_normal = wall_ray.get_collision_normal()
 	var wall_point = wall_ray.get_collision_point()
-	
-	# GRAB EXACT SURFACE HEIGHT: Instead of using the ray's origin, we look at the exact collision spot.
 	var exact_ledge_y = ledge_floor_check.get_collision_point().y
-	
-	# Define a 2-step animation path using the new precise height
-	# Note: 1.01 matches a standard CharacterBody3D capsule pivot point standing perfectly on a floor.
 	var climb_up_pos = Vector3(global_position.x, exact_ledge_y + 1.1, global_position.z)
 	var climb_forward_pos = wall_point - (wall_normal * 0.6)
 	climb_forward_pos.y = exact_ledge_y + 1.01
 
 	var tween = create_tween().set_parallel(false)
-	
-	# Step 1: Smoothly pull up vertically
 	tween.tween_property(self, "global_position:y", climb_up_pos.y, 0.3)\
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-		
-	# Step 2: Push forward onto solid ground
 	tween.tween_property(self, "global_position", climb_forward_pos, 0.25)\
 		.set_trans(Tween.TRANS_LINEAR)
-		
 	tween.tween_callback(finish_climbing)
 
 func finish_climbing() -> void:
 	is_climbing = false
 
 func change_person() -> void:
-	is_first_person = !is_first_person # Wissel de boolean om
+	is_first_person = !is_first_person
 	if is_first_person:
-		camera_base_pos = Vector3(0, 0, 0) # Of je originele ooghoogte
+		camera_base_pos = Vector3(0, 0, 0)
 	else:
-		camera_base_pos = Vector3(0, 1.5, 3.0) # 3 meter naar achteren
-	print("Perspectief veranderd")
-	
-func _input(ev):
+		camera_base_pos = Vector3(0, 1.5, 3.0)
+
+func _input(_ev):
 	if Input.is_key_pressed(KEY_K):
 		change_person()
+
+func crouch() -> void:
+	is_crouching = true
+	speed = CROUCH_SPEED
+	var height_diff = STAND_HEIGHT - CROUCH_HEIGHT
+	collision.shape.height = CROUCH_HEIGHT
+	# Shift player up so feet stay on the ground
+	global_position.y += height_diff / 2.0
+	# Tween the offset instead of camera position directly
+	var tween = create_tween()
+	tween.tween_method(func(v): crouch_cam_offset = v, 0.0, -height_diff / 2.0, 0.15)
+
+func uncrouch() -> void:
+	is_crouching = false
+	var height_diff = STAND_HEIGHT - CROUCH_HEIGHT
+	collision.shape.height = STAND_HEIGHT
+	global_position.y -= height_diff / 2.0
+	var tween = create_tween()
+	tween.tween_method(func(v): crouch_cam_offset = v, -height_diff / 2.0, 0.0, 0.15)
