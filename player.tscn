@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://2e2dbgeb2mdr"]
 
-[ext_resource type="Script" uid="uid://jyjogxlirdy3" path="res://player.gd" id="1_4flbx"]
+[ext_resource type="Script" uid="uid://b804pbpnmdc4q" path="res://playerv2.gd" id="1_4flbx"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_4flbx"]
+radius = 0.45
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a0tk4"]
 height = 1.92
@@ -12,6 +15,63 @@ albedo_color = Color(1, 0.21960784, 1, 1)
 material = SubResource("StandardMaterial3D_a202f")
 height = 1.92
 
+[sub_resource type="Animation" id="Animation_4flbx"]
+resource_name = "Crouching"
+length = 1.7
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Model/CollisionShape3D:shape:height")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.92, 1.2999999999999998]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/path = NodePath("Model/CollisionShape3D:position")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.75, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Model/Head:position")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0.6, 0), Vector3(0, 0.385, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Model/CollisionShape3D/MeshInstance3D:mesh:height")
+tracks/3/interp = 2
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.92, 1.5]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_onrkg"]
+_data = {
+&"Crouching": SubResource("Animation_4flbx")
+}
+
 [node name="Player" type="Node3D" unique_id=1392047774]
 
 [node name="Model" type="CharacterBody3D" parent="." unique_id=278713253]
@@ -19,10 +79,15 @@ collision_layer = 2
 script = ExtResource("1_4flbx")
 metadata/_edit_group_ = true
 
+[node name="ShapeCast3D" type="ShapeCast3D" parent="Model" unique_id=1563340912]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12021473, 0)
+shape = SubResource("SphereShape3D_4flbx")
+target_position = Vector3(0, 0.5, 0)
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Model" unique_id=1098769316]
 shape = SubResource("CapsuleShape3D_a0tk4")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Model" unique_id=266453819]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Model/CollisionShape3D" unique_id=266453819]
 transform = Transform3D(1, 0, 0, 0, 0.9999709, 0.0076270155, 0, -0.0076270155, 0.9999709, 0, 0, 0)
 mesh = SubResource("CapsuleMesh_noarx")
 
@@ -34,11 +99,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5548513, -0.23983869)
 target_position = Vector3(0, 0, -0.7)
 
 [node name="LegdeChecker" type="RayCast3D" parent="Model/Head" unique_id=55210179]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3523122, -0.23983869)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.6955116, 0, 0.3523122, -0.23983869)
 target_position = Vector3(0, 0, -1.065)
 
 [node name="LedgeFloorChecker" type="RayCast3D" parent="Model/Head/LegdeChecker" unique_id=1648171048]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.0218344)
+transform = Transform3D(0.60913515, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.0218344)
 target_position = Vector3(0, -2, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Model/Head" unique_id=1346322419]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=855860205]
+libraries/ = SubResource("AnimationLibrary_onrkg")

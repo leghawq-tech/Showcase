@@ -16,7 +16,7 @@ sky = SubResource("Sky_noarx")
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2dftf"]
 albedo_color = Color(0.53, 0.53, 0.53, 1)
 
-[node name="Node3D" type="Node3D" unique_id=1456526795]
+[node name="World" type="Node3D" unique_id=1456526795]
 
 [node name="Floor" parent="." unique_id=1020688448 instance=ExtResource("1_2dftf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, -0.15999994, 0)
@@ -91,15 +91,15 @@ size = Vector3(0.8, 9.400001, 12.6)
 material = SubResource("StandardMaterial3D_2dftf")
 
 [node name="CSGBox3D10" type="CSGBox3D" parent="CSGCombiner3D" unique_id=969464414]
-transform = Transform3D(-1.9101878e-07, 0, 0.27999997, 0, 0.63, 0, -4.3700004, 0, -1.2239187e-08, -27.108004, -1.46, 1.573)
+transform = Transform3D(-1.9101876e-07, 0, 0.27999997, 0, 0.63000005, 0, -4.3700004, 0, -1.22391866e-08, -27.108004, -1.46, 1.573)
 use_collision = true
 size = Vector3(1, 8.6, 21.800001)
 material = SubResource("StandardMaterial3D_2dftf")
 
 [node name="CSGBox3D11" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1879065454]
-transform = Transform3D(-1.9101878e-07, 0, 0.27999997, 0, 0.63, 0, -4.3700004, 0, -1.2239187e-08, -27.108004, 0.9795003, -6.227)
+transform = Transform3D(-1.9101878e-07, 0, 0.27999997, 0, 0.63, 0, -4.3700004, 0, -1.2239187e-08, -27.108004, 1.248719, -6.2269983)
 use_collision = true
-size = Vector3(1, 5.3, 21.300001)
+size = Vector3(1, 4.445337, 21.300001)
 material = SubResource("StandardMaterial3D_2dftf")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1924724676]
