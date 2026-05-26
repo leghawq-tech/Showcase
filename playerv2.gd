@@ -56,11 +56,24 @@ func _physics_process(delta):
 	if _is_sliding:
 		slide_timer -= delta
 		var t = slide_timer / SLIDE_DURATION
-		velocity.x = slide_direction.x * SLIDE_SPEED * (t * t)
-		velocity.z = slide_direction.z * SLIDE_SPEED * (t * t)
-	if slide_timer <= 0.0:
-		_is_sliding = false
 		
+		# Get current input direction for steering
+		var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+		var forward = -transform.basis.z
+		var right = transform.basis.x
+		forward.y = 0
+		right.y = 0
+		var steer_dir = (forward * -input_dir.y + right * input_dir.x).normalized()
+		
+		# Blend slide direction with steering input
+		var blended = slide_direction.lerp(steer_dir, 0.25) if steer_dir.length() > 0 else slide_direction
+		
+		velocity.x = blended.x * SLIDE_SPEED * (t * t)
+		velocity.z = blended.z * SLIDE_SPEED * (t * t)
+		
+		if slide_timer <= 0.0:
+			_is_sliding = false
+
 	# --- SNAPPY JUMPING SYSTEM ---
 	if not is_on_floor():
 		if velocity.y > 0:
