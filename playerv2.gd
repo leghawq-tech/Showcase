@@ -75,9 +75,9 @@ func _physics_process(delta):
 			can_wall_run = false
 			await get_tree().create_timer(0.2).timeout
 			can_wall_run = true
-	elif check_for_ledge():
-			start_ledge_climb()
-			return
+		elif check_for_ledge():
+				start_ledge_climb()
+				return
 
 	#Handle Crouch en Camera toggle 
 	if Input.is_action_just_pressed("Camera Toggle"):
