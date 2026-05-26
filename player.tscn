@@ -79,6 +79,16 @@ collision_layer = 2
 script = ExtResource("1_4flbx")
 metadata/_edit_group_ = true
 
+[node name="RayRight" type="RayCast3D" parent="Model" unique_id=658065017]
+unique_name_in_owner = true
+transform = Transform3D(-4.371138e-08, 0.9999999, 0, -0.9999999, -4.371138e-08, 0, 0, 0, 1, 0, -0.15829349, 0)
+target_position = Vector3(0, -0.75, 0)
+
+[node name="RayLeft" type="RayCast3D" parent="Model" unique_id=1724723109]
+unique_name_in_owner = true
+transform = Transform3D(-4.3711385e-08, -0.9999999, 0, 0.9999999, -4.3711385e-08, 0, 0, 0, 1, 0, -0.15829349, 0)
+target_position = Vector3(0, -0.75, 0)
+
 [node name="ShapeCast3D" type="ShapeCast3D" parent="Model" unique_id=1563340912]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12021473, 0)
 shape = SubResource("SphereShape3D_4flbx")

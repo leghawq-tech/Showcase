@@ -21,14 +21,17 @@ var camera_base_pos := Vector3.ZERO
 #fov variables
 const BASE_FOV = 70.0
 const FOV_CHANGE = 1.5
+var can_wall_run: bool = false
 
 # Crouch variables
-const STAND_HEIGHT = 1.92
-const CROUCH_CAM_Y = 0.0
-const STAND_CAM_Y = 0.6
 
 var _is_crouching: bool = false
 var is_first_person = true
+var _is_sliding: bool = false
+var slide_timer = 0.0
+var slide_direction := Vector3.ZERO
+const SLIDE_DURATION := 1.4   # seconds
+const SLIDE_SPEED := 12.0    # tune to feel right
 
 @onready var head = $Head
 @onready var camera = $Head/Camera3D
@@ -38,15 +41,26 @@ var is_first_person = true
 @onready var collision = $CollisionShape3D
 @onready var ANIMATIONPLAYER = $"../AnimationPlayer"
 @onready var head_check = $ShapeCast3D
+@onready var ray_right = %RayRight
+@onready var ray_left = %RayLeft
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	camera_base_pos = camera.transform.origin
+	head.rotation.y = 0  # make sure head isn't offsetting the body rotation
 
 func _physics_process(delta):
 	if is_climbing:
 		return
 
+	if _is_sliding:
+		slide_timer -= delta
+		var t = slide_timer / SLIDE_DURATION
+		velocity.x = slide_direction.x * SLIDE_SPEED * (t * t)
+		velocity.z = slide_direction.z * SLIDE_SPEED * (t * t)
+	if slide_timer <= 0.0:
+		_is_sliding = false
+		
 	# --- SNAPPY JUMPING SYSTEM ---
 	if not is_on_floor():
 		if velocity.y > 0:
@@ -58,17 +72,22 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("ui_accept"):
 		if is_on_floor() and not _is_crouching:
 			velocity.y = JUMP_VELOCITY
-		elif check_for_ledge():
+			can_wall_run = false
+			await get_tree().create_timer(0.2).timeout
+			can_wall_run = true
+	elif check_for_ledge():
 			start_ledge_climb()
 			return
 
 	#Handle Crouch en Camera toggle 
 	if Input.is_action_just_pressed("Camera Toggle"):
 		change_person()
+
 	if Input.is_action_just_pressed("crouch"):
+		slide_direction = Vector3(velocity.x, 0, velocity.z).normalized()
 		toggle_crouch()
-		
-	# Handle Sprint
+
+# Handle Sprint
 	if Input.is_action_pressed("sprint") and not _is_crouching:
 		speed = SPRINT_SPEED
 	elif not _is_crouching:
@@ -78,11 +97,17 @@ func _physics_process(delta):
 
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-	var direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	var forward = -transform.basis.z
+	var right = transform.basis.x
+	forward.y = 0
+	right.y = 0
+	var direction = (forward * -input_dir.y + right * input_dir.x).normalized()
 	
-	if is_on_floor():
+	if not is_on_floor() and can_wall_run == true and Input.is_action_pressed("ui_accept") and (ray_left.is_colliding() or ray_right.is_colliding()):
+		velocity.y = 0
+	else:
 		_normal_run(direction, delta)
-	
+
 	# Head bob
 	t_bob += delta * velocity.length() * float(is_on_floor())
 	camera.transform.origin = camera_base_pos + _headbob(t_bob)
@@ -101,6 +126,7 @@ func _normal_run(direction, delta):
 	else:
 		velocity.x = lerp(velocity.x, direction.x * speed, delta * 7.0)
 		velocity.z = lerp(velocity.z, direction.z * speed, delta * 7.0)
+		
 
 func _headbob(time) -> Vector3:
 	var pos = Vector3.ZERO
@@ -145,21 +171,24 @@ func change_person() -> void:
 		camera_base_pos = Vector3(0, 1.5, 3.0)
 
 func toggle_crouch():
-	if _is_crouching == true and head_check.is_colliding() == false:
+	if _is_crouching == false and is_on_floor() and speed >= WALK_SPEED:
+		ANIMATIONPLAYER.play("Crouching", -1, 7.0)
+		_is_crouching = true
+		_is_sliding = true
+		slide_timer = SLIDE_DURATION
+	elif _is_crouching == true and head_check.is_colliding() == false:
 		print("uncrouch")
 		ANIMATIONPLAYER.play("Crouching", -1, -7.0, true)
 		_is_crouching = false
-		return
 	elif _is_crouching == false:
 		print("crouch")
 		ANIMATIONPLAYER.play("Crouching", -1, 7.0)
 		_is_crouching = true
-		return
 
 func _unhandled_input(event):
 	if is_climbing:
 		return
 	if event is InputEventMouseMotion:
-		head.rotate_y(-event.relative.x * SENSITIVITY)
+		rotate_y(-event.relative.x * SENSITIVITY)
 		camera.rotate_x(-event.relative.y * SENSITIVITY)
 		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-60), deg_to_rad(70))
