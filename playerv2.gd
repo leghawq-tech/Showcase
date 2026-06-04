@@ -3,7 +3,7 @@ extends CharacterBody3D
 var speed
 const WALK_SPEED = 6.0
 const SPRINT_SPEED = 9.0
-const JUMP_VELOCITY = 6.5
+const JUMP_VELOCITY = 8
 const SENSITIVITY = 0.004
 const CROUCH_SPEED = 3.0
 
@@ -22,6 +22,7 @@ var camera_base_pos := Vector3.ZERO
 const BASE_FOV = 70.0
 const FOV_CHANGE = 1.5
 var can_wall_run: bool = false
+var jump_count
 
 # Crouch variables
 
@@ -84,13 +85,24 @@ func _physics_process(delta):
 	# Handle Jump / Ledge Climb Trigger
 	if Input.is_action_just_pressed("ui_accept"):
 		if is_on_floor() and not _is_crouching:
+		# Normale sprong
 			velocity.y = JUMP_VELOCITY
+			can_wall_run = false
+			jump_count = 1  # Reset jump count
+			await get_tree().create_timer(0.2).timeout
+			can_wall_run = true
+		
+		elif jump_count < 2 and not is_on_floor() and not _is_crouching and not (ray_left.is_colliding() or ray_right.is_colliding() or wall_ray.is_colliding()):
+		# Double jump
+			velocity.y = JUMP_VELOCITY * 0.9  # Iets lagere double jump (optioneel)
+			jump_count += 1
 			can_wall_run = false
 			await get_tree().create_timer(0.2).timeout
 			can_wall_run = true
+		
 		elif check_for_ledge():
-				start_ledge_climb()
-				return
+			start_ledge_climb()
+			return
 
 	#Handle Crouch en Camera toggle 
 	if Input.is_action_just_pressed("Camera Toggle"):
