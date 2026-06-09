@@ -31,7 +31,7 @@ shadow_enabled = true
 environment = SubResource("Environment_a0tk4")
 
 [node name="Player" parent="." unique_id=741141872 instance=ExtResource("2_bcbcq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9659513, -7.638544)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.329278, -16.946487)
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=1831845849]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 13.05, 2.6399999, -2.0499973)
@@ -84,10 +84,10 @@ use_collision = true
 size = Vector3(0.8, 9.400001, 12.6)
 material = SubResource("StandardMaterial3D_2dftf")
 
-[node name="CSGBox3D6" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1361574756]
-transform = Transform3D(-1.9101878e-07, 0, 0.27999997, 0, 0.3, 0, -4.3700004, 0, -1.2239187e-08, -22.450005, -1.3399999, 12.650002)
+[node name="slope" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1361574756]
+transform = Transform3D(-1.9101877e-07, -0.1796274, 0.22426035, 7.1054274e-15, 0.240279, 0.16765223, -4.37, 7.851763e-09, -9.80273e-09, -18.17948, 0.59091234, 12.650002)
 use_collision = true
-size = Vector3(0.8, 9.400001, 12.6)
+size = Vector3(1.0996094, 9.400001, 44.77002)
 material = SubResource("StandardMaterial3D_2dftf")
 
 [node name="CSGBox3D10" type="CSGBox3D" parent="CSGCombiner3D" unique_id=969464414]

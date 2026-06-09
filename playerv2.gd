@@ -44,11 +44,14 @@ const SLIDE_SPEED := 12.0    # tune to feel right
 @onready var head_check = $ShapeCast3D
 @onready var ray_right = %RayRight
 @onready var ray_left = %RayLeft
+@onready var tp_cam = $CameraPivot/SpringArm3D/ThirdPersonCamera
+@onready var camera_pivot = $CameraPivot
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	camera_base_pos = camera.transform.origin
 	head.rotation.y = 0  # make sure head isn't offsetting the body rotation
+	camera.make_current()
 
 func _physics_process(delta):
 	if is_climbing:
@@ -88,13 +91,13 @@ func _physics_process(delta):
 		# Normale sprong
 			velocity.y = JUMP_VELOCITY
 			can_wall_run = false
-			jump_count = 1  # Reset jump count
+			jump_count = 1 
 			await get_tree().create_timer(0.2).timeout
 			can_wall_run = true
 		
 		elif jump_count < 2 and not is_on_floor() and not _is_crouching and not (ray_left.is_colliding() or ray_right.is_colliding() or wall_ray.is_colliding()):
 		# Double jump
-			velocity.y = JUMP_VELOCITY * 0.9  # Iets lagere double jump (optioneel)
+			velocity.y = JUMP_VELOCITY * 0.9  
 			jump_count += 1
 			can_wall_run = false
 			await get_tree().create_timer(0.2).timeout
@@ -191,12 +194,12 @@ func finish_climbing() -> void:
 func change_person() -> void:
 	is_first_person = !is_first_person
 	if is_first_person:
-		camera_base_pos = Vector3(0, 0, 0)
+		camera.make_current()
 	else:
-		camera_base_pos = Vector3(0, 1.5, 3.0)
+		tp_cam.make_current()
 
 func toggle_crouch():
-	if _is_crouching == false and is_on_floor() and speed >= WALK_SPEED:
+	if _is_crouching == false and is_on_floor() and speed > WALK_SPEED:
 		ANIMATIONPLAYER.play("Crouching", -1, 7.0)
 		_is_crouching = true
 		_is_sliding = true
@@ -217,3 +220,6 @@ func _unhandled_input(event):
 		rotate_y(-event.relative.x * SENSITIVITY)
 		camera.rotate_x(-event.relative.y * SENSITIVITY)
 		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-60), deg_to_rad(70))
+		
+		tp_cam.rotate_x(-event.relative.y * SENSITIVITY)
+		tp_cam.rotation.x = clamp(camera.rotation.x, deg_to_rad(-60), deg_to_rad(70))

@@ -79,6 +79,14 @@ collision_layer = 2
 script = ExtResource("1_4flbx")
 metadata/_edit_group_ = true
 
+[node name="CameraPivot" type="Node3D" parent="Model" unique_id=763692834]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="Model/CameraPivot" unique_id=446581235]
+spring_length = 3.0
+
+[node name="ThirdPersonCamera" type="Camera3D" parent="Model/CameraPivot/SpringArm3D" unique_id=34784537]
+
 [node name="RayRight" type="RayCast3D" parent="Model" unique_id=658065017]
 unique_name_in_owner = true
 transform = Transform3D(-4.371138e-08, 0.9999999, 0, -0.9999999, -4.371138e-08, 0, 0, 0, 1, 0, -0.15829349, 0)
