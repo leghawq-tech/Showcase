@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://chitjy8k7mq67"]
+
+[ext_resource type="Script" uid="uid://br0p43ybg0kk4" path="res://Scripts/ui_interface.gd" id="1_m2m0t"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2dj66"]
+bg_color = Color(0, 0, 0, 0.65)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0jyn1"]
+bg_color = Color(0.25, 0.5, 0.9, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="UiInterface" type="Control" unique_id=994297437]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_m2m0t")
+
+[node name="PausePanel" type="Panel" parent="." unique_id=610915538]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_2dj66")
+
+[node name="CenterContainer" type="CenterContainer" parent="PausePanel" unique_id=1201695254]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PausePanel/CenterContainer" unique_id=234562239]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="PausePanel/CenterContainer/VBoxContainer" unique_id=949238039]
+layout_mode = 2
+theme_override_font_sizes/font_size = 42
+text = "Paused"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="PausePanel/CenterContainer/VBoxContainer" unique_id=1107346747]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="Resume" type="Button" parent="PausePanel/CenterContainer/VBoxContainer" unique_id=1378490088]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_0jyn1")
+text = "Resume"
+
+[node name="Quit" type="Button" parent="PausePanel/CenterContainer/VBoxContainer" unique_id=36949256]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_0jyn1")
+text = "Quit to Menu"
+
+[connection signal="pressed" from="PausePanel/CenterContainer/VBoxContainer/Resume" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="PausePanel/CenterContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]

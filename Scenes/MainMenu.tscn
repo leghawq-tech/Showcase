@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://dkmd0nyb8b48g"]
+
+[ext_resource type="Script" uid="uid://dtnqxx8jsxiul" path="res://Scripts/main_menu.gd" id="1_8sn4x"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8sn4x"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4jxv2"]
+bg_color = Color(0.15, 0.15, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2bbad"]
+bg_color = Color(0.25, 0.5, 0.9, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="MainMenu" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8sn4x")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.07, 0.07, 0.1, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(300, 0)
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="CenterContainer/VBoxContainer"]
+theme_override_font_sizes/font_size = 48
+horizontal_alignment = 1
+text = "Showcase Project"
+
+[node name="Spacer" type="Control" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+
+[node name="StartGame" type="Button" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+theme_override_styles/normal = SubResource("StyleBoxFlat_4jxv2")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2bbad")
+theme_override_font_sizes/font_size = 20
+text = "Start Game"
+
+[node name="Quit" type="Button" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+theme_override_styles/normal = SubResource("StyleBoxFlat_4jxv2")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2bbad")
+theme_override_font_sizes/font_size = 20
+text = "Quit"
+
+[connection signal="pressed" from="CenterContainer/VBoxContainer/StartGame" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
