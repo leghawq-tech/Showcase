@@ -72,60 +72,59 @@ _data = {
 &"Crouching": SubResource("Animation_4flbx")
 }
 
-[node name="Player" type="Node3D" unique_id=1392047774]
-
-[node name="Model" type="CharacterBody3D" parent="." unique_id=278713253]
+[node name="Model" type="CharacterBody3D" unique_id=278713253]
 collision_layer = 2
 floor_snap_length = 0.3
 script = ExtResource("1_4flbx")
 metadata/_edit_group_ = true
 
-[node name="CameraPivot" type="Node3D" parent="Model" unique_id=763692834]
+[node name="CameraPivot" type="Node3D" parent="." unique_id=763692834]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 
-[node name="SpringArm3D" type="SpringArm3D" parent="Model/CameraPivot" unique_id=446581235]
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot" unique_id=446581235]
 spring_length = 3.0
 
-[node name="ThirdPersonCamera" type="Camera3D" parent="Model/CameraPivot/SpringArm3D" unique_id=34784537]
+[node name="ThirdPersonCamera" type="Camera3D" parent="CameraPivot/SpringArm3D" unique_id=34784537]
 
-[node name="RayRight" type="RayCast3D" parent="Model" unique_id=658065017]
+[node name="RayRight" type="RayCast3D" parent="." unique_id=658065017]
 unique_name_in_owner = true
 transform = Transform3D(-4.371138e-08, 0.9999999, 0, -0.9999999, -4.371138e-08, 0, 0, 0, 1, 0, -0.15829349, 0)
 target_position = Vector3(0, -0.75, 0)
 
-[node name="RayLeft" type="RayCast3D" parent="Model" unique_id=1724723109]
+[node name="RayLeft" type="RayCast3D" parent="." unique_id=1724723109]
 unique_name_in_owner = true
 transform = Transform3D(-4.3711385e-08, -0.9999999, 0, 0.9999999, -4.3711385e-08, 0, 0, 0, 1, 0, -0.15829349, 0)
 target_position = Vector3(0, -0.75, 0)
 
-[node name="ShapeCast3D" type="ShapeCast3D" parent="Model" unique_id=1563340912]
+[node name="ShapeCast3D" type="ShapeCast3D" parent="." unique_id=1563340912]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12021473, 0)
 shape = SubResource("SphereShape3D_4flbx")
 target_position = Vector3(0, 0.5, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Model" unique_id=1098769316]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1098769316]
 shape = SubResource("CapsuleShape3D_a0tk4")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Model/CollisionShape3D" unique_id=266453819]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D" unique_id=266453819]
 transform = Transform3D(1, 0, 0, 0, 0.9999709, 0.0076270155, 0, -0.0076270155, 0.9999709, 0, 0, 0)
 mesh = SubResource("CapsuleMesh_noarx")
 
-[node name="Head" type="Node3D" parent="Model" unique_id=1756501611]
+[node name="Head" type="Node3D" parent="." unique_id=1756501611]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 
-[node name="RayFacingWall" type="RayCast3D" parent="Model/Head" unique_id=217027152]
+[node name="RayFacingWall" type="RayCast3D" parent="Head" unique_id=217027152]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5548513, -0.23983869)
 target_position = Vector3(0, 0, -0.7)
 
-[node name="LegdeChecker" type="RayCast3D" parent="Model/Head" unique_id=55210179]
+[node name="LegdeChecker" type="RayCast3D" parent="Head" unique_id=55210179]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.6955116, 0, 0.3523122, -0.23983869)
 target_position = Vector3(0, 0, -1.065)
 
-[node name="LedgeFloorChecker" type="RayCast3D" parent="Model/Head/LegdeChecker" unique_id=1648171048]
+[node name="LedgeFloorChecker" type="RayCast3D" parent="Head/LegdeChecker" unique_id=1648171048]
 transform = Transform3D(0.60913515, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.0218344)
 target_position = Vector3(0, -2, 0)
 
-[node name="Camera3D" type="Camera3D" parent="Model/Head" unique_id=1346322419]
+[node name="Camera3D" type="Camera3D" parent="Head" unique_id=1346322419]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=855860205]
+root_node = NodePath("")
 libraries/ = SubResource("AnimationLibrary_onrkg")

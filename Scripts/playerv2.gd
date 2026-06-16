@@ -1,11 +1,17 @@
 extends CharacterBody3D
 
 var speed
-const WALK_SPEED = 6.0
-const SPRINT_SPEED = 9.0
+const WALK_SPEED = 3.0
+const SPRINT_SPEED = 6.0
 const JUMP_VELOCITY = 8
 const SENSITIVITY = 0.004
-const CROUCH_SPEED = 3.0
+const CROUCH_SPEED = 2.0
+
+const STAND_HEIGHT = 1.873
+const CROUCH_HEIGHT = 1.189
+# We also need to lower the center position so the character doesn't float
+const STAND_POS_Y = 0.823
+const CROUCH_POS_Y = 0.481
 
 # Snappy Jump Variables
 const BASE_GRAVITY = 18.0
@@ -40,18 +46,24 @@ const SLIDE_SPEED := 12.0    # tune to feel right
 @onready var ledge_check = $Head/LegdeChecker
 @onready var ledge_floor_check = $Head/LegdeChecker/LedgeFloorChecker
 @onready var collision = $CollisionShape3D
-@onready var ANIMATIONPLAYER = $"../AnimationPlayer"
+@onready var ANIMATIONPLAYER = $AnimationPlayer 
 @onready var head_check = $ShapeCast3D
+@onready var anim_tree = $AnimationTree
 @onready var ray_right = %RayRight
 @onready var ray_left = %RayLeft
 @onready var tp_cam = $CameraPivot/SpringArm3D/ThirdPersonCamera
 @onready var camera_pivot = $CameraPivot
+@onready var armature = $Char_Rig
+@onready var state_machine = anim_tree.get("parameters/playback")
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	camera_base_pos = camera.transform.origin
 	head.rotation.y = 0  # make sure head isn't offsetting the body rotation
 	camera.make_current()
+	
+	anim_tree.active = true
+	state_machine.start("Movement")
 
 func _physics_process(delta):
 	if is_climbing:
@@ -86,18 +98,17 @@ func _physics_process(delta):
 			velocity.y -= (BASE_GRAVITY * FALL_GRAVITY_MULT) * delta
 
 	# Handle Jump / Ledge Climb Trigger
-	if Input.is_action_just_pressed("ui_accept"):
-		if is_on_floor() and not _is_crouching:
+	if Input.is_action_just_pressed("ui_accept") and not _is_crouching:
+		if is_on_floor():
 		# Normale sprong
 			velocity.y = JUMP_VELOCITY
 			can_wall_run = false
 			jump_count = 1 
 			await get_tree().create_timer(0.2).timeout
 			can_wall_run = true
-
-		elif jump_count < 2 and not is_on_floor() and not _is_crouching and not (ray_left.is_colliding() or ray_right.is_colliding() or (wall_ray.is_colliding() and not ledge_check.is_colliding())):
+		elif jump_count < 2 and not is_on_floor() and not (ray_left.is_colliding() or ray_right.is_colliding() or (wall_ray.is_colliding() and not ledge_check.is_colliding())):
 		# Double jump
-			velocity.y = JUMP_VELOCITY * 0.9  
+			velocity.y = JUMP_VELOCITY * 0.9 
 			jump_count += 1
 			can_wall_run = false
 			await get_tree().create_timer(0.2).timeout
@@ -111,10 +122,6 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("Camera Toggle"):
 		change_person()
 
-	if Input.is_action_just_pressed("crouch"):
-		slide_direction = Vector3(velocity.x, 0, velocity.z).normalized()
-		toggle_crouch()
-
 # Handle Sprint
 	if Input.is_action_pressed("sprint") and not _is_crouching:
 		speed = SPRINT_SPEED
@@ -124,17 +131,27 @@ func _physics_process(delta):
 		speed = CROUCH_SPEED
 
 	# Get the input direction and handle the movement/deceleration.
-	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	var input_dir2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	var forward = -transform.basis.z
 	var right = transform.basis.x
 	forward.y = 0
 	right.y = 0
-	var direction = (forward * -input_dir.y + right * input_dir.x).normalized()
+	var direction = (forward * -input_dir2.y + right * input_dir2.x).normalized()
 	
 	if not is_on_floor() and can_wall_run == true and Input.is_action_pressed("ui_accept") and (ray_left.is_colliding() or ray_right.is_colliding()):
 		velocity.y = 0
 	else:
 		_normal_run(direction, delta)
+		var curr_speed = Vector2(velocity.x, velocity.z).length()
+		anim_tree.set("parameters/Movement/blend_position", curr_speed)
+
+	if Input.is_action_just_pressed("crouch"):
+		if _is_crouching == false and is_on_floor():
+			_is_crouching = true
+			state_machine.travel("CrouchIdle")
+		elif _is_crouching == true and head_check.is_colliding() == false:
+			_is_crouching = false
+			state_machine.travel("Movement")
 
 	# Head bob
 	t_bob += delta * velocity.length() * float(is_on_floor())
@@ -146,6 +163,12 @@ func _physics_process(delta):
 	camera.fov = lerp(camera.fov, target_fov, delta * 8.0)
 	tp_cam.fov = lerp(camera.fov, target_fov, delta * 8.0)
 	
+	# --- COLLISION CAPSULE
+	var target_height = CROUCH_HEIGHT if _is_crouching else STAND_HEIGHT
+	var target_pos_y = CROUCH_POS_Y if _is_crouching else STAND_POS_Y
+	collision.shape.height = lerp(collision.shape.height, target_height, delta * 10.0)
+	collision.position.y = lerp(collision.position.y, target_pos_y, delta * 10.0)
+	
 	move_and_slide()
 
 func _normal_run(direction, delta):
@@ -155,7 +178,6 @@ func _normal_run(direction, delta):
 	else:
 		velocity.x = lerp(velocity.x, direction.x * speed, delta * 7.0)
 		velocity.z = lerp(velocity.z, direction.z * speed, delta * 7.0)
-		
 
 func _headbob(time) -> Vector3:
 	var pos = Vector3.ZERO
@@ -198,21 +220,6 @@ func change_person() -> void:
 		camera.make_current()
 	else:
 		tp_cam.make_current()
-
-func toggle_crouch():
-	if _is_crouching == false and is_on_floor() and speed > WALK_SPEED:
-		ANIMATIONPLAYER.play("Crouching", -1, 7.0)
-		_is_crouching = true
-		_is_sliding = true
-		slide_timer = SLIDE_DURATION
-	elif _is_crouching == true and head_check.is_colliding() == false:
-		print("uncrouch")
-		ANIMATIONPLAYER.play("Crouching", -1, -7.0, true)
-		_is_crouching = false
-	elif _is_crouching == false:
-		print("crouch")
-		ANIMATIONPLAYER.play("Crouching", -1, 7.0)
-		_is_crouching = true
 
 func _unhandled_input(event):
 	if is_climbing:

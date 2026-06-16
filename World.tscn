@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://rvn4gt350oc8"]
 
 [ext_resource type="PackedScene" uid="uid://858ofi73oqy5" path="res://World/floor.tscn" id="1_2dftf"]
-[ext_resource type="PackedScene" uid="uid://2e2dbgeb2mdr" path="res://Scenes/player.tscn" id="2_bcbcq"]
+[ext_resource type="PackedScene" uid="uid://ctpc3q4q88hao" path="res://player_model.tscn" id="2_bcbcq"]
 [ext_resource type="PackedScene" uid="uid://chitjy8k7mq67" path="res://Scenes/UI Interface.tscn" id="3_72xcd"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_a202f"]
@@ -31,10 +31,10 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1712357259]
 environment = SubResource("Environment_a0tk4")
 
-[node name="Player" parent="." unique_id=741141872 instance=ExtResource("2_bcbcq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.329278, -16.946487)
-
 [node name="UiInterface" parent="." unique_id=1402662838 instance=ExtResource("3_72xcd")]
+
+[node name="Model" parent="." unique_id=1534128019 instance=ExtResource("2_bcbcq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.930717, 1.6363387, -29.017153)
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=1831845849]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 13.05, 2.6399999, -2.0499973)
@@ -100,7 +100,7 @@ size = Vector3(1, 8.6, 21.800001)
 material = SubResource("StandardMaterial3D_2dftf")
 
 [node name="CSGBox3D11" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1879065454]
-transform = Transform3D(-1.9101878e-07, 0, 0.27999997, 0, 0.63, 0, -4.3700004, 0, -1.2239187e-08, -27.108004, 1.248719, -6.2269983)
+transform = Transform3D(-1.9101878e-07, 0, 0.27999997, 0, 0.63, 0, -4.3700004, 0, -1.2239187e-08, -27.108004, 1.3073535, -6.2269983)
 use_collision = true
 size = Vector3(1, 4.445337, 21.300001)
 material = SubResource("StandardMaterial3D_2dftf")
