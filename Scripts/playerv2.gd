@@ -106,7 +106,7 @@ func _physics_process(delta):
 			jump_count = 1 
 			await get_tree().create_timer(0.2).timeout
 			can_wall_run = true
-		elif jump_count < 2 and not is_on_floor() and not (ray_left.is_colliding() or ray_right.is_colliding() or (wall_ray.is_colliding() and not ledge_check.is_colliding())):
+		elif jump_count < 2 and not is_on_floor() and not _is_crouching and not (ray_left.is_colliding() or ray_right.is_colliding() or (wall_ray.is_colliding() and not ledge_check.is_colliding())):
 		# Double jump
 			velocity.y = JUMP_VELOCITY * 0.9 
 			jump_count += 1
