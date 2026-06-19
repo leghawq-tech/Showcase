@@ -86,6 +86,11 @@ spring_length = 3.0
 
 [node name="ThirdPersonCamera" type="Camera3D" parent="CameraPivot/SpringArm3D" unique_id=34784537]
 
+[node name="ShapeCast3D" type="ShapeCast3D" parent="CameraPivot" unique_id=1563340912]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.4797853, 0)
+shape = SubResource("SphereShape3D_4flbx")
+target_position = Vector3(0, 0.5, 0)
+
 [node name="RayRight" type="RayCast3D" parent="." unique_id=658065017]
 unique_name_in_owner = true
 transform = Transform3D(-4.371138e-08, 0.9999999, 0, -0.9999999, -4.371138e-08, 0, 0, 0, 1, 0, -0.15829349, 0)
@@ -95,11 +100,6 @@ target_position = Vector3(0, -0.75, 0)
 unique_name_in_owner = true
 transform = Transform3D(-4.3711385e-08, -0.9999999, 0, 0.9999999, -4.3711385e-08, 0, 0, 0, 1, 0, -0.15829349, 0)
 target_position = Vector3(0, -0.75, 0)
-
-[node name="ShapeCast3D" type="ShapeCast3D" parent="." unique_id=1563340912]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12021473, 0)
-shape = SubResource("SphereShape3D_4flbx")
-target_position = Vector3(0, 0.5, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1098769316]
 shape = SubResource("CapsuleShape3D_a0tk4")

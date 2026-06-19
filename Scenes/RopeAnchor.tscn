@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ccselstnvr1mq"]
 
-[ext_resource type="Script" uid="uid://q5mf0gimdtdq" path="res://static_body_3d.gd" id="1_i62sg"]
-[ext_resource type="PackedScene" uid="uid://cqtdq6hqa8sm8" path="res://RopeSegment.tscn" id="2_0vrrh"]
+[ext_resource type="Script" uid="uid://q5mf0gimdtdq" path="res://Scripts/static_body_3d.gd" id="1_i62sg"]
+[ext_resource type="PackedScene" uid="uid://cqtdq6hqa8sm8" path="res://Scenes/RopeSegment.tscn" id="2_0vrrh"]
 
 [node name="RopeAnchor" type="Node3D" unique_id=2064775300]
 
