@@ -30,12 +30,6 @@ const FOV_CHANGE = 1.5
 var can_wall_run: bool = false
 var jump_count
 
-var can_grab_rope: bool = false
-var current_rope: Node3D = null
-var is_hanging_on_rope: bool = false
-var rope_grab_point: Vector3
-var rope_hang_offset: Vector3 = Vector3(0, -1.2, 0)
-
 # Crouch variables
 
 var _is_crouching: bool = false
@@ -47,6 +41,7 @@ const SLIDE_DURATION := 1.4   # seconds
 const SLIDE_SPEED := 12.0    # tune to feel right
 
 @onready var head = $Head
+@onready var push_zone = $PushZone
 @onready var camera = $Head/Camera3D
 @onready var wall_ray = $Head/RayFacingWall
 @onready var ledge_check = $Head/LegdeChecker
@@ -61,16 +56,6 @@ const SLIDE_SPEED := 12.0    # tune to feel right
 @onready var camera_pivot = $CameraPivot
 @onready var armature = $Char_Rig
 @onready var state_machine = anim_tree.get("parameters/playback")
-@onready var rope_grab_marker: Marker3D = $RopeGrabPoint
-
-var rope_pivot: Vector3
-var rope_length: float = 0.0
-
-@export var rope_gravity: float = 20.0
-@export var rope_input_force: float = 22.0
-@export var min_rope_length: float = 1.2
-
-
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -78,22 +63,12 @@ func _ready():
 	head.rotation.y = 0  # make sure head isn't offsetting the body rotation
 	camera.make_current()
 	
-	add_to_group("player")
-	print("PLAYER GROUPS: ", get_groups())
-	
 	anim_tree.active = true
 	state_machine.start("Movement")
 
 func _physics_process(delta):
 	if is_climbing:
 		return
-
-	handle_rope_grab(delta)
-	if is_hanging_on_rope:
-		swing_on_rope(delta)
-		return
-
-
 
 	if _is_sliding:
 		slide_timer -= delta
@@ -194,8 +169,22 @@ func _physics_process(delta):
 	var target_pos_y = CROUCH_POS_Y if _is_crouching else STAND_POS_Y
 	collision.shape.height = lerp(collision.shape.height, target_height, delta * 10.0)
 	collision.position.y = lerp(collision.position.y, target_pos_y, delta * 10.0)
+	var current_speed = velocity.length()
 	
 	move_and_slide()
+
+	if current_speed > 0.1 and push_zone.has_overlapping_bodies():
+		for body in push_zone.get_overlapping_bodies():
+			if body is RigidBody3D:
+				var push_direction = (body.global_position - global_position).normalized()
+				push_direction.y = 0
+				push_direction = push_direction.normalized()
+				var force_multiplier = 2.0
+				var smooth_push_force = current_speed * force_multiplier * delta
+
+				body.apply_central_impulse(push_direction * smooth_push_force)
+
+
 
 func _normal_run(direction, delta):
 	if direction:
@@ -239,89 +228,6 @@ func start_ledge_climb() -> void:
 
 func finish_climbing() -> void:
 	is_climbing = false
-
-func handle_rope_grab(_delta: float) -> void:
-	var wants_to_grab := can_grab_rope and current_rope != null and Input.is_action_pressed("ui_accept")
-
-	if wants_to_grab:
-		if not is_hanging_on_rope:
-			start_rope_swing()
-
-		is_hanging_on_rope = true
-	else:
-		is_hanging_on_rope = false
-
-
-func start_rope_swing() -> void:
-	var top_point: Marker3D = current_rope.get_node("TopPoint")
-
-	rope_pivot = top_point.global_position
-
-	var closest_grab_point := get_closest_point_on_rope()
-
-	# Zet je hand/borst marker op het punt waar je het touw pakt
-	var marker_offset: Vector3 = rope_grab_marker.global_position - global_position
-	global_position = closest_grab_point - marker_offset
-
-	# Lengte van het touw vanaf bovenkant naar waar je hem pakt
-	rope_length = rope_pivot.distance_to(closest_grab_point)
-	rope_length = max(rope_length, min_rope_length)
-
-
-func swing_on_rope(delta: float) -> void:
-	velocity.y -= rope_gravity * delta
-
-	var input_dir := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-	var move_dir := Vector3(input_dir.x, 0, input_dir.y).normalized()
-
-	if move_dir.length() > 0:
-		velocity += move_dir * rope_input_force * delta
-
-	move_and_slide()
-	constrain_to_rope()
-
-	if current_rope and current_rope.has_method("update_rope_visual"):
-		current_rope.update_rope_visual(rope_pivot, rope_grab_marker.global_position)
-
-
-func constrain_to_rope() -> void:
-	var marker_offset: Vector3 = rope_grab_marker.global_position - global_position
-	var marker_pos: Vector3 = rope_grab_marker.global_position
-
-	var from_pivot: Vector3 = marker_pos - rope_pivot
-	var distance: float = from_pivot.length()
-
-	if distance == 0:
-		return
-
-	if distance > rope_length:
-		var rope_dir: Vector3 = from_pivot.normalized()
-
-		var corrected_marker_pos: Vector3 = rope_pivot + rope_dir * rope_length
-		global_position = corrected_marker_pos - marker_offset
-
-		# Haal snelheid weg die van het touw af trekt
-		var outward_speed: float = velocity.dot(rope_dir)
-		if outward_speed > 0:
-			velocity -= rope_dir * outward_speed
-
-
-func get_closest_point_on_rope() -> Vector3:
-	var top_point: Marker3D = current_rope.get_node("TopPoint")
-	var bottom_point: Marker3D = current_rope.get_node("BottomPoint")
-
-	var top: Vector3 = top_point.global_position
-	var bottom: Vector3 = bottom_point.global_position
-
-	return get_closest_point_on_line(top, bottom, rope_grab_marker.global_position)
-
-
-func get_closest_point_on_line(a: Vector3, b: Vector3, point: Vector3) -> Vector3:
-	var ab: Vector3 = b - a
-	var t: float = (point - a).dot(ab) / ab.dot(ab)
-	t = clamp(t, 0.0, 1.0)
-
-	return a + ab * t
 
 func change_person() -> void:
 	is_first_person = !is_first_person

@@ -72,7 +72,7 @@ _data = {
 &"Crouching": SubResource("Animation_4flbx")
 }
 
-[node name="Model" type="CharacterBody3D" unique_id=278713253]
+[node name="Model" type="CharacterBody3D" unique_id=278713253 groups=["player"]]
 collision_layer = 2
 floor_snap_length = 0.3
 script = ExtResource("1_4flbx")

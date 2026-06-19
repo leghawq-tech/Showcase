@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://cqtdq6hqa8sm8"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ueymu"]
+radius = 0.05
+height = 0.5
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_q1rrs"]
+radius = 0.05
+height = 0.5
+
+[node name="RopeSegment" type="RigidBody3D" unique_id=1970837653]
+collision_layer = 4
+collision_mask = 0
+mass = 0.1
+linear_damp = 2.0
+angular_damp = 3.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=5004163]
+shape = SubResource("CapsuleShape3D_ueymu")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=688870327]
+mesh = SubResource("CapsuleMesh_q1rrs")
+
+[node name="ConeTwistJoint3D" type="ConeTwistJoint3D" parent="." unique_id=894623379]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.2536601, 0)
