@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://ddvfyquojvxdx"]
+
+[ext_resource type="Script" uid="uid://3rp7jiafwwmh" path="res://Scripts/death_trigger.gd" id="1_cffc7"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5k52b"]
+size = Vector3(2, 0.297, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e688l"]
+albedo_color = Color(0.21, 0.21, 0.21, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2rkoe"]
+material = SubResource("StandardMaterial3D_e688l")
+size = Vector3(2, 1, 2)
+
+[node name="Node3D" type="Node3D" unique_id=1352458238]
+script = ExtResource("1_cffc7")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1996746353]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1391482810]
+shape = SubResource("BoxShape3D_5k52b")
+debug_color = Color(0.99215686, 0, 0.28235295, 0.41960785)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D" unique_id=2139549427]
+transform = Transform3D(1, 0, 0, 0, 0.3, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("BoxMesh_2rkoe")

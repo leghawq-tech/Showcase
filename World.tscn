@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://ctpc3q4q88hao" path="res://Scenes/player_model.tscn" id="2_bcbcq"]
 [ext_resource type="PackedScene" uid="uid://chitjy8k7mq67" path="res://Scenes/UI Interface.tscn" id="3_72xcd"]
 [ext_resource type="PackedScene" uid="uid://ccselstnvr1mq" path="res://Scenes/RopeAnchor.tscn" id="5_eu7l1"]
+[ext_resource type="PackedScene" uid="uid://ddvfyquojvxdx" path="res://Scenes/deathtrigger.tscn" id="5_p1v5b"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_a202f"]
 sky_horizon_color = Color(0.6901961, 0.654902, 0.67058825, 1)
@@ -25,7 +26,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, -0.15999994, 0)
 metadata/_edit_lock_ = true
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=17131595]
-transform = Transform3D(-0.4502564, -0.7915521, 0.41317576, 0.6418469, 0.034761243, 0.76604444, -0.6207267, 0.6101123, 0.49240386, -0.59999883, 3.4000006, 8.900001)
+transform = Transform3D(0.091447234, -0.9953131, -0.031455934, 0.6418469, 0.034761332, 0.76604456, -0.7613604, -0.090242594, 0.6420172, -0.59999883, 3.4000006, 8.900001)
 light_energy = 1.042
 shadow_enabled = true
 
@@ -35,7 +36,7 @@ environment = SubResource("Environment_a0tk4")
 [node name="UiInterface" parent="." unique_id=1402662838 instance=ExtResource("3_72xcd")]
 
 [node name="Model" parent="." unique_id=351598617 instance=ExtResource("2_bcbcq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -74.14029, 17.78384, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -73.215, 23.719162, -101.57994)
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=1831845849]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 13.05, 2.6399999, -2.0499973)
@@ -161,7 +162,7 @@ size = Vector3(30.800001, 3.1000001, 5.7000003)
 material = SubResource("StandardMaterial3D_2dftf")
 
 [node name="RopeAnchor" parent="." unique_id=2064775300 instance=ExtResource("5_eu7l1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -74.78213, 21.133408, -9.175289)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -74.78213, 21.133408, -70.17708)
 
 [node name="CSGCombiner3D2" type="CSGCombiner3D" parent="." unique_id=1475136971]
 use_collision = true
@@ -179,7 +180,7 @@ size = Vector3(10.136597, 16.823975, 15)
 [node name="CSGBox3D9" type="CSGBox3D" parent="CSGCombiner3D2" unique_id=679160162]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -73.92, 19.614807, -26.241814)
 use_collision = true
-size = Vector3(10.136597, 3.4040527, 4.501343)
+size = Vector3(10.136597, 3.4040527, 3.2695313)
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D2" unique_id=1746916551]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -73.92, 8.301987, -37.364853)
@@ -192,14 +193,29 @@ use_collision = true
 size = Vector3(10.136597, 16.823975, 17.939941)
 
 [node name="CSGBox3D5" type="CSGBox3D" parent="CSGCombiner3D2" unique_id=394972600]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -73.92, 6.3531, -85.31571)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -73.92, 6.3531, -87.596176)
 use_collision = true
-size = Vector3(10.136597, 16.823975, 26.161377)
+size = Vector3(10.136597, 16.823975, 13.101196)
 
 [node name="CSGBox3D8" type="CSGBox3D" parent="CSGCombiner3D2" unique_id=1188161665]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -73.92, 6.3531, -126.27959)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -73.92, 9.457254, -95.47548)
 use_collision = true
-size = Vector3(10.136597, 16.823975, 26.161377)
+size = Vector3(10.136597, 16.823975, 3.5800781)
+
+[node name="CSGBox3D12" type="CSGBox3D" parent="CSGCombiner3D2" unique_id=1245249813]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -73.92, 12.497206, -99.00985)
+use_collision = true
+size = Vector3(10.136597, 16.823975, 3.5800781)
+
+[node name="CSGBox3D13" type="CSGBox3D" parent="CSGCombiner3D2" unique_id=2062843239]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -73.92, 14.801435, -102.634445)
+use_collision = true
+size = Vector3(10.136597, 16.823975, 3.5800781)
+
+[node name="CSGBox3D14" type="CSGBox3D" parent="CSGCombiner3D2" unique_id=1488252357]
+transform = Transform3D(1, 0, 0, 0, 0.6157716, -0.7879248, 0, 0.7879248, 0.6157716, -73.92, 14.109093, -113.19134)
+use_collision = true
+size = Vector3(10.136597, 24.996445, 3.5800781)
 
 [node name="CSGBox3D6" type="CSGBox3D" parent="CSGCombiner3D2" unique_id=1589693943]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -63.947803, 14.207226, -68.68273)
@@ -210,3 +226,7 @@ size = Vector3(10.136597, 32.532227, 137.40433)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -83.96967, 14.207226, -68.39709)
 use_collision = true
 size = Vector3(10.136597, 32.532227, 136.83304)
+
+[node name="Deathtrigger" parent="." unique_id=1352458238 instance=ExtResource("5_p1v5b")]
+transform = Transform3D(7.280146, 0, 0, 0, 2.043131, 0, 0, 0, 77.606514, -73.97254, 0.066458136, -66.94262)
+respawn_position = Vector3(-73.215, 15, -3)

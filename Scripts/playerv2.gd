@@ -5,6 +5,9 @@ const WALK_SPEED = 5.0
 const SPRINT_SPEED = 9.0
 const CROUCH_SPEED = 2.0
 const JUMP_VELOCITY = 8
+const AIR_CONTROL := 2.0
+const AIR_DRAG := 0.05
+
 
 # Constants: Gravity & Jump
 const BASE_GRAVITY = 18.0
@@ -25,11 +28,23 @@ const CROUCH_HEIGHT = 1.189
 const STAND_POS_Y = 0.823
 const CROUCH_POS_Y = 0.481
 
-const SLIDE_DURATION := 0.85
 const SLIDE_MIN_START_SPEED := 13.0
 const SLIDE_START_BOOST := 4.0
 const SLIDE_FRICTION := 5.0
 const SLIDE_STEER_FORCE := 5.0
+
+const AUTO_SLIDE_ANGLE :=  38.0
+const MAX_AUTO_SLIDE_ANGLE := 65.0
+const SLOPE_SLIDE_FORCE := 7
+const MAX_SLIDE_SPEED := 20
+
+const MANUAL_SLOPE_ACCEL_MIN_ANGLE := 5.0
+const MANUAL_SLOPE_FORCE := 8.0
+
+var _is_sliding: bool = false
+var slide_direction := Vector3.ZERO
+var slide_velocity := Vector3.ZERO
+
 
 # Constants: Rope Swing
 const SWING_GRAVITY := 15.0
@@ -48,10 +63,7 @@ var camera_base_pos := Vector3.ZERO
 
 # State: Crouch / Slide
 var _is_crouching: bool = false
-var _is_sliding: bool = false
-var slide_timer: float = 0.0
-var slide_direction := Vector3.ZERO
-var slide_velocity := Vector3.ZERO
+
 
 # State: Ledge Climb
 var _is_climbing: bool = false
@@ -89,6 +101,8 @@ func _ready():
 	head.rotation.y = 0
 	camera.make_current()
 	head_check.add_exception(self)
+	floor_snap_length = 0.25
+	floor_stop_on_slope = false
 	add_to_group("player")
 
 	var stand_top = STAND_POS_Y + STAND_HEIGHT / 2.0
@@ -114,31 +128,47 @@ func _physics_process(delta):
 		_swing_physics(delta)
 		return
 
-	_apply_snappy_gravity(delta)
+	_apply_gravity(delta)
 	_handle_rope_grab_input()
-	_handle_jump_or_ledge()
 	_handle_camera_toggle()
 	_handle_sprint_speed()
+	_handle_crouch_slide_input(delta)
+	_handle_jump_or_ledge()
 	_handle_movement(delta)
-	_handle_crouch_slide_input()
 	_apply_headbob_and_fov(delta)
 	_apply_collision_crouch(delta)
-
 	move_and_slide()
 
 
 # Gravity
-func _apply_snappy_gravity(delta: float) -> void:
+func _apply_gravity(delta: float) -> void:
 	if not is_on_floor():
 		if velocity.y > 0:
 			velocity.y -= BASE_GRAVITY * delta
 		else:
 			velocity.y -= (BASE_GRAVITY * FALL_GRAVITY_MULT) * delta
 
-
 func _handle_jump_or_ledge() -> void:
-	if _is_swinging or not Input.is_action_just_pressed("ui_accept") or _is_crouching:
+	if Input.is_action_just_pressed("ui_accept"):
+		print("JUMP INPUT | floor:", is_on_floor(), " crouch:", _is_crouching, " slide:", _is_sliding, " ctrl:", Input.is_action_pressed("crouch"))
+	if _is_swinging or not Input.is_action_just_pressed("ui_accept"):
 		return
+
+	# Als je crouch vasthoudt, niet springen
+	if Input.is_action_pressed("crouch"):
+		return
+
+	# Als je slidet: stop slide en spring
+	if _is_sliding:
+		_is_sliding = false
+		velocity.x = slide_velocity.x
+		velocity.z = slide_velocity.z
+		slide_velocity = Vector3.ZERO
+
+	# Forceer uit crouch voor jump
+	if _is_crouching:
+		_is_crouching = false
+		state_machine.travel("Movement")
 
 	if is_on_floor():
 		velocity.y = JUMP_VELOCITY
@@ -146,8 +176,9 @@ func _handle_jump_or_ledge() -> void:
 		jump_count = 1
 		await get_tree().create_timer(0.2).timeout
 		can_wall_run = true
+		await get_tree().create_timer(0.5).timeout
 
-	elif jump_count < 2 and not is_on_floor() and not _is_crouching \
+	elif jump_count < 2 and not is_on_floor() \
 	and not (ray_left.is_colliding() or ray_right.is_colliding() \
 	or (wall_ray.is_colliding() and not ledge_check.is_colliding())):
 		velocity.y = JUMP_VELOCITY * 0.9
@@ -158,7 +189,6 @@ func _handle_jump_or_ledge() -> void:
 
 	elif check_for_ledge():
 		start_ledge_climb()
-
 
 # Rope Grab Input
 func _handle_rope_grab_input() -> void:
@@ -192,34 +222,62 @@ func _handle_movement(delta: float) -> void:
 	right.y = 0
 	var direction = (forward * -input_dir2.y + right * input_dir2.x).normalized()
 
+	var effectively_airborne := not is_on_floor() or velocity.y > 0.0
+
 	if _is_sliding:
 		handle_slide(direction, delta)
-	elif not is_on_floor() and can_wall_run \
+
+	elif effectively_airborne and can_wall_run \
 	and Input.is_action_pressed("ui_accept") \
 	and (ray_left.is_colliding() or ray_right.is_colliding()):
 		velocity.y = 0
+
+	elif effectively_airborne:
+		_air_move(direction, delta)
+
 	else:
 		_normal_run(direction, delta)
 		var curr_speed = Vector2(velocity.x, velocity.z).length()
 		anim_tree.set("parameters/Movement/blend_position", curr_speed)
 
 
+
 # Crouch / Slide Input
-func _handle_crouch_slide_input() -> void:
-	if not Input.is_action_just_pressed("crouch"):
+func _handle_crouch_slide_input(delta: float) -> void:
+	var crouch_held := Input.is_action_pressed("crouch")
+	var too_steep := should_auto_slide()
+	
+	# Minder bounce op slopes
+	if is_on_floor() and not Input.is_action_just_pressed("ui_accept"):
+		apply_floor_snap()
+		if velocity.y > 0.0:
+			velocity.y = 0.0
+
+	# Automatisch sliden op te steile hellingen
+	if too_steep:
+		if not _is_sliding:
+			start_slide(true)
 		return
 
-	if not _is_crouching and is_on_floor():
-		if Input.is_action_pressed("sprint") \
-		and Vector2(velocity.x, velocity.z).length() > WALK_SPEED:
-			run_to_slide()
-		else:
+	# Ctrl vasthouden = crouch/slide
+	if crouch_held:
+		if not _is_crouching:
 			_is_crouching = true
 			state_machine.travel("CrouchIdle")
 
-	elif _is_crouching and can_stand_up() and not _is_sliding:
-		_is_crouching = false
-		state_machine.travel("Movement")
+		var horizontal_speed := Vector2(velocity.x, velocity.z).length()
+
+		if is_on_floor() and not _is_sliding and horizontal_speed > WALK_SPEED:
+			start_slide(false)
+
+	# Ctrl loslaten = altijd proberen opstaan
+	else:
+		if _is_sliding:
+			stop_slide()
+
+		if _is_crouching and can_stand_up():
+			_is_crouching = false
+			state_machine.travel("Movement")
 
 
 # Head Bob & FOV
@@ -246,6 +304,16 @@ func _normal_run(direction: Vector3, delta: float) -> void:
 	velocity.x = lerp(velocity.x, direction.x * speed, delta * 7.0)
 	velocity.z = lerp(velocity.z, direction.z * speed, delta * 7.0)
 
+func _air_move(direction: Vector3, delta: float) -> void:
+	# Alleen klein beetje sturen in de lucht, maar momentum behouden
+	if direction.length() > 0:
+		velocity.x = lerp(velocity.x, velocity.x + direction.x * AIR_CONTROL, delta)
+		velocity.z = lerp(velocity.z, velocity.z + direction.z * AIR_CONTROL, delta)
+
+	# Heel lichte drag zodat het niet oneindig blijft versnellen
+	velocity.x = lerp(velocity.x, velocity.x * (1.0 - AIR_DRAG), delta)
+	velocity.z = lerp(velocity.z, velocity.z * (1.0 - AIR_DRAG), delta)
+
 
 func _headbob(time: float) -> Vector3:
 	var pos = Vector3.ZERO
@@ -268,9 +336,9 @@ func start_ledge_climb() -> void:
 	var wall_normal = wall_ray.get_collision_normal()
 	var wall_point = wall_ray.get_collision_point()
 	var exact_ledge_y = ledge_floor_check.get_collision_point().y
-	var climb_up_pos = Vector3(global_position.x, exact_ledge_y + 1.1, global_position.z)
-	var climb_forward_pos = wall_point - (wall_normal * 0.6)
-	climb_forward_pos.y = exact_ledge_y + 1.01
+	var climb_up_pos = Vector3(global_position.x, exact_ledge_y + 0.1, global_position.z)
+	var climb_forward_pos = wall_point - (wall_normal * 0.5)
+	climb_forward_pos.y = exact_ledge_y + 0.1
 
 	var tween = create_tween().set_parallel(false)
 	tween.tween_property(self, "global_position:y", climb_up_pos.y, 0.3)\
@@ -370,59 +438,148 @@ func _unhandled_input(event):
 
 
 # Slide
-
-func run_to_slide() -> void:
+func start_slide(auto_slide: bool) -> void:
 	if not is_on_floor() or _is_sliding:
-		return
-
-	var horizontal_velocity := Vector3(velocity.x, 0, velocity.z)
-	var current_speed := horizontal_velocity.length()
-
-	if current_speed < WALK_SPEED:
 		return
 
 	_is_sliding = true
 	_is_crouching = true
-	slide_timer = SLIDE_DURATION
-
-	if horizontal_velocity.length() > 0.1:
-		slide_direction = horizontal_velocity.normalized()
-	else:
-		slide_direction = -transform.basis.z
-		slide_direction.y = 0
-		slide_direction = slide_direction.normalized()
-
-	var start_speed = max(current_speed + SLIDE_START_BOOST, SLIDE_MIN_START_SPEED)
-	slide_velocity = slide_direction * start_speed
-
 	state_machine.travel("CrouchIdle")
 
+	var horizontal_velocity := Vector3(velocity.x, 0, velocity.z)
+	var current_speed := horizontal_velocity.length()
+
+	if auto_slide:
+		slide_direction = get_downhill_direction()
+	else:
+		var input_dir := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+
+		var forward := -transform.basis.z
+		var right := transform.basis.x
+		forward.y = 0
+		right.y = 0
+
+		var input_direction := (forward * -input_dir.y + right * input_dir.x).normalized()
+
+		if input_direction.length() > 0:
+			slide_direction = input_direction
+		elif horizontal_velocity.length() > 0.1:
+			slide_direction = horizontal_velocity.normalized()
+		else:
+			slide_direction = -transform.basis.z
+			slide_direction.y = 0
+			slide_direction = slide_direction.normalized()
+
+	var start_speed: float = maxf(current_speed + SLIDE_START_BOOST, SLIDE_MIN_START_SPEED)
+	slide_velocity = slide_direction * start_speed
+	velocity.x = slide_velocity.x
+	velocity.z = slide_velocity.z
+
+
+func stop_slide() -> void:
+	_is_sliding = false
+	slide_velocity = Vector3.ZERO
+
+	if can_stand_up():
+		_is_crouching = false
+		state_machine.travel("Movement")
+	else:
+		_is_crouching = true
+		state_machine.travel("CrouchIdle")
+
+
 func handle_slide(direction: Vector3, delta: float) -> void:
-	slide_timer -= delta
+	var too_steep := should_auto_slide()
 
+	if is_on_floor():
+		apply_floor_snap()
+		if velocity.y > 0.0:
+			velocity.y = 0.0
+
+	# Steering
 	if direction.length() > 0:
-		slide_direction = (slide_direction + direction * SLIDE_STEER_FORCE * delta).normalized()
+		slide_direction = slide_direction.lerp(direction, SLIDE_STEER_FORCE * delta).normalized()
 
-	var current_slide_speed := slide_velocity.length()
-	current_slide_speed = move_toward(current_slide_speed, 0.0, SLIDE_FRICTION * delta)
+	# Steile slope = momentum opbouwen downhill
+	var slope_angle := get_floor_slope_angle()
+	var downhill := get_downhill_direction()
+	var is_downhill_slope := is_on_floor() and slope_angle > MANUAL_SLOPE_ACCEL_MIN_ANGLE and downhill.length() > 0
 
-	slide_velocity = slide_direction * current_slide_speed
+	if is_downhill_slope:
+		var force := MANUAL_SLOPE_FORCE
+
+		# Als het echt te steil is, gebruik sterkere auto-slide force
+		if should_auto_slide():
+			force = SLOPE_SLIDE_FORCE
+
+		# Hoe steiler de slope, hoe meer acceleration
+		var steepness := inverse_lerp(MANUAL_SLOPE_ACCEL_MIN_ANGLE, AUTO_SLIDE_ANGLE, slope_angle)
+		steepness = clamp(steepness, 0.2, 1.0)
+
+		slide_velocity += downhill * force * steepness * delta
+
+		if slide_velocity.length() > MAX_SLIDE_SPEED:
+			slide_velocity = slide_velocity.normalized() * MAX_SLIDE_SPEED
+
+		slide_direction = slide_velocity.normalized()
+
+	else:
+		var current_slide_speed := slide_velocity.length()
+		current_slide_speed = move_toward(current_slide_speed, 0.0, SLIDE_FRICTION * delta)
+		slide_velocity = slide_direction * current_slide_speed
+
+		if current_slide_speed < WALK_SPEED:
+			_is_sliding = false
+
+			if Input.is_action_pressed("crouch"):
+				_is_crouching = true
+				state_machine.travel("CrouchIdle")
+			elif can_stand_up():
+				_is_crouching = false
+				state_machine.travel("Movement")
+			else:
+				_is_crouching = true
+				state_machine.travel("CrouchIdle")
 
 	velocity.x = slide_velocity.x
 	velocity.z = slide_velocity.z
 
-	if slide_timer <= 0.0 or current_slide_speed < WALK_SPEED:
-		_is_sliding = false
 
-		if Input.is_action_pressed("crouch"):
-			_is_crouching = true
-			state_machine.travel("CrouchIdle")
-		elif head_check.is_colliding() == false:
-			_is_crouching = false
-			state_machine.travel("Movement")
-		else:
-			_is_crouching = true
-			state_machine.travel("CrouchIdle")
+func get_floor_slope_angle() -> float:
+	if not is_on_floor():
+		return 0.0
+
+	var floor_normal := get_floor_normal()
+	return rad_to_deg(acos(clamp(floor_normal.dot(Vector3.UP), -1.0, 1.0)))
+
+
+func get_downhill_direction() -> Vector3:
+	if not is_on_floor():
+		return Vector3.ZERO
+
+	var floor_normal := get_floor_normal()
+	var downhill := Vector3.DOWN.slide(floor_normal)
+
+	if downhill.length() <= 0.01:
+		return Vector3.ZERO
+
+	return downhill.normalized()
+
+func should_auto_slide() -> bool:
+	if not is_on_floor():
+		return false
+
+	var angle := get_floor_slope_angle()
+
+	# Te vlak = niet sliden
+	if angle < AUTO_SLIDE_ANGLE:
+		return false
+
+	# Te stijl/verticale rand = waarschijnlijk een wall/edge, niet een echte slope
+	if angle > MAX_AUTO_SLIDE_ANGLE:
+		return false
+
+	return true
 
 func can_stand_up() -> bool:
 	head_check.force_shapecast_update()
