@@ -1,10 +1,9 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>3D Parkour Movement Prototype</title>
+  <title>3D Parkour Showcase Game</title>
 
   <style>
     body {
@@ -26,7 +25,7 @@
     }
 
     header p {
-      max-width: 750px;
+      max-width: 850px;
       font-size: 18px;
       color: #cfcfcf;
     }
@@ -119,24 +118,22 @@
 <body>
 
   <header>
-    <h1>3D Parkour Movement Prototype</h1>
+    <h1>3D Parkour Showcase Game</h1>
     <p>
-      A 3D parkour game prototype made in Godot. The goal of this project was to create a playable movement prototype with running, jumping, sliding, wallrunning, ledge climbing and rope swinging.
+      A playable 3D parkour showcase game made in Godot. The game focuses on fast movement, flow and testing different parkour mechanics inside an overgrown city environment. The player can run, jump, slide, wallrun, climb ledges and use rope swinging to move through the level.
     </p>
   </header>
 
   <section>
     <h2>Gameplay Showcase</h2>
     <p>
-      This video shows the final prototype and how the main movement mechanics work inside the level.
+      This video shows the showcase game in action. It demonstrates how the player moves through the level and how the different movement mechanics work together during gameplay.
     </p>
 
     <div class="video-box">
-      <!-- Replace this link with your video embed link if you have one -->
-      <iframe src="YOUR_GAMEPLAY_VIDEO_LINK_HERE" allowfullscreen></iframe>
+      <iframe src="https://www.youtube.com/watch?v=yN4rG-WgyzE" allowfullscreen></iframe>
 
-      <!-- Keep this button as a backup in case the embed does not work -->
-      <a class="button" href="YOUR_GAMEPLAY_VIDEO_LINK_HERE" target="_blank">
+      <a class="button" href="https://www.youtube.com/watch?v=yN4rG-WgyzE" target="_blank">
         Watch gameplay video
       </a>
     </div>
@@ -145,11 +142,65 @@
   <section>
     <h2>Project Overview</h2>
     <p>
-      This project is a playable 3D parkour prototype. The focus was not to create a fully finished game, but to build a working prototype where different movement mechanics could be tested in one level.
+      This project is a 3D parkour showcase game made to show the movement systems, level design and gameplay ideas I developed during the project. The main focus of the game is movement. I wanted the player to move through the world in a way that feels fast, responsive and fun.
     </p>
     <p>
-      The player moves through an overgrown city-style level and can use different parkour mechanics to complete the run. The level includes a timer and death triggers, so the player can try to finish the route faster.
+      The game takes place in an overgrown city-style environment. The level was first made as a simple greybox testing area, but later I added buildings, materials, assets and atmosphere to make the world feel more alive.
     </p>
+    <p>
+      The player moves through a timed route with obstacles, jumps, walls, low spaces and dangerous areas. The level includes a timer and death triggers, so the player can try to complete the route faster and improve their run.
+    </p>
+  </section>
+
+  <section>
+    <h2>How To Play</h2>
+    <p>
+      The goal is to move through the level as fast as possible using the parkour mechanics. The timer tracks your run, and if you fall into a death trigger you will be reset so you can try again.
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Move</h3>
+        <p>
+          Use <strong>WASD</strong> to move around the level. Move the mouse to control the camera and look around.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Run & Jump</h3>
+        <p>
+          Use <strong>Shift</strong> to run and <strong>Space</strong> to jump. Press <strong>Space</strong> again while in the air to double jump.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Slide & Crouch</h3>
+        <p>
+          Use <strong>Ctrl</strong> to crouch or slide. Sliding gives the player a small speed boost and gives more momentum when going downhill.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Wallrun</h3>
+        <p>
+          Jump towards a wall while moving forward to start wallrunning. This helps the player cross gaps and keep movement flow.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Ledge Climb</h3>
+        <p>
+          When the player reaches a ledge, the character can climb up if there is enough space above it.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Rope Swing</h3>
+        <p>
+          Hold <strong>Space</strong> near a rope to grab it and swing across gaps.
+        </p>
+      </div>
+    </div>
   </section>
 
   <section>
@@ -158,32 +209,58 @@
     <div class="grid">
       <div class="card">
         <h3>Basic Movement</h3>
-        <p>Walking, running and jumping form the base of the player controller.</p>
+        <p>
+          The player can walk, run and jump. These mechanics form the base of the player controller and are used throughout the whole level.
+        </p>
       </div>
 
       <div class="card">
         <h3>Advanced Movement</h3>
-        <p>The prototype includes crouching, sliding, double jumping, wallrunning and ledge climbing.</p>
+        <p>
+          The game includes crouching, sliding, double jumping, wallrunning and ledge climbing. These mechanics make the movement more varied and give the player more ways to move through the level.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Sliding Momentum</h3>
+        <p>
+          Sliding gives the player a small speed boost. Sliding downhill also gives extra momentum, which makes slopes more useful and makes the movement feel faster.
+        </p>
       </div>
 
       <div class="card">
         <h3>Rope Swinging</h3>
-        <p>I made experimental rope swinging mechanics to test how swinging could work in the game.</p>
+        <p>
+          I experimented with rope swinging mechanics. I made a simpler scripted version and also tested a more physics-based version to see which approach worked better.
+        </p>
       </div>
 
       <div class="card">
         <h3>Timer & Death Triggers</h3>
-        <p>The level includes a timer and death triggers to make the prototype feel more like a playable run.</p>
+        <p>
+          The level includes a timer to track the player’s run and death triggers that reset the player when they fall out of the level.
+        </p>
       </div>
 
       <div class="card">
         <h3>Camera & UI</h3>
-        <p>The game uses a third-person camera with a SpringArm and has a main menu and pause menu.</p>
+        <p>
+          The game uses a third-person camera with a SpringArm to reduce camera clipping. I also added a main menu and pause menu to make the game feel more complete.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Custom Player Model</h3>
+        <p>
+          I created my own player model in Blender, rigged it, animated it and imported it into Godot. The character uses animations connected to movement states.
+        </p>
       </div>
 
       <div class="card">
         <h3>Sound Design</h3>
-        <p>I added footsteps, ambient sound and wind/speed sounds to make the movement feel more alive.</p>
+        <p>
+          I added footsteps, ambient sound and wind/speed sounds. These sounds give the player more feedback and make movement feel less empty.
+        </p>
       </div>
     </div>
   </section>
@@ -191,37 +268,56 @@
   <section class="process">
     <h2>Tools Used</h2>
     <p>
-      The game was made in <strong>Godot</strong>. I used <strong>Blender</strong> to create and animate the player model. I also used online tutorials, documentation, Reddit and AI support when I got stuck or needed extra explanation.
+      The game was made in <strong>Godot</strong>. I used Godot for the player controller, movement systems, camera, UI, level logic, timer, death triggers and sound implementation.
+    </p>
+    <p>
+      I used <strong>Blender</strong> to create the player model and learn more about 3D modelling, rigging and animation. I also used online tutorials, documentation, Reddit and AI support when I got stuck or needed extra explanation.
     </p>
   </section>
 
   <section>
     <h2>Development Process</h2>
     <p>
-      I started by choosing a game engine and learning the basics of Godot. After that, I made a simple greybox test level where I could test movement mechanics without spending too much time on visuals.
+      I started by choosing Godot as my game engine and learning the basics of the editor, GDScript and 3D scenes. After that, I built a simple greybox level where I could test the movement mechanics without focusing on visuals yet.
     </p>
     <p>
-      I then added basic movement, camera control and more advanced mechanics like sliding, wallrunning and ledge climbing. Later, I created my own player model in Blender, rigged it, animated it and imported it into Godot.
+      I first worked on basic movement and camera control, then added more advanced mechanics such as sliding, wallrunning, double jumping, ledge climbing and rope swinging. I tested these mechanics inside the level and adjusted values like speed, gravity, momentum and air control to make the movement feel better.
     </p>
     <p>
-      Near the end of the project, I improved the level by adding assets, sound effects, a timer, death triggers and a more complete main menu.
+      Later, I created a player model in Blender, rigged it, animated it and imported it into Godot. I also added a main menu, pause menu, sounds, a timer, death triggers and visual assets to turn the level into a more complete playable showcase game.
     </p>
   </section>
 
   <section>
-    <h2>What Could Be Improved</h2>
+    <h2>Visual Direction</h2>
     <p>
-      The prototype could still be improved by polishing the animations, cleaning up the player controller code and making the rope mechanic feel smoother. The level could also be made more consistent visually, but for this project the main focus was on creating a working movement prototype.
+      The visual direction of the game is inspired by overgrown and post-apocalyptic city environments. I wanted the world to feel abandoned but still interesting to move through. Earlier in the project I thought about a jungle-style game, but I later changed direction to an overgrown city because it fit better with the parkour idea.
+    </p>
+    <p>
+      The level started as a greybox with simple blocks. Later I added buildings, nature assets, textures and materials to make the world feel more alive. The final look is not meant to be fully realistic, but it gives the level more atmosphere and makes the route feel more like an actual game world.
+    </p>
+  </section>
+
+  <section>
+    <h2>What I Learned</h2>
+    <p>
+      During this project I learned how to build a 3D game in Godot from the ground up. I learned how scenes and nodes work, how to write GDScript, how to use collisions and raycasts, and how to build a movement system that connects to a camera and animation setup.
+    </p>
+    <p>
+      I also learned a lot about Blender. I learned how to create simple 3D models, how to use modifiers, how to rig a character and how to create basic animations. Importing the model into Godot taught me that scale, rotation, hierarchy and animation setup are very important.
+    </p>
+    <p>
+      The biggest thing I learned is that a mechanic can work technically but still not feel good in gameplay. Because of that, testing and adjusting values was a big part of the project.
     </p>
   </section>
 
   <section>
     <h2>Project Links</h2>
     <p>
-      The GitHub repository contains the project files and code.
+      The GitHub repository contains the project files and code. This makes it possible to view the structure of the project, the scripts and the development work behind the showcase game.
     </p>
 
-    <a class="button" href="YOUR_GITHUB_REPO_LINK_HERE" target="_blank">
+    <a class="button" href="https://github.com/leghawq-tech/Showcase" target="_blank">
       View GitHub Repository
     </a>
   </section>
