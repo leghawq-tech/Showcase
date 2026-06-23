@@ -1,0 +1,234 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Parkour Movement Prototype</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #0f1113;
+      color: #f2f2f2;
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 80px 10%;
+      background: linear-gradient(135deg, #101214, #1c2b22);
+    }
+
+    header h1 {
+      font-size: 48px;
+      margin: 0 0 15px;
+    }
+
+    header p {
+      max-width: 750px;
+      font-size: 18px;
+      color: #cfcfcf;
+    }
+
+    section {
+      padding: 50px 10%;
+    }
+
+    h2 {
+      font-size: 32px;
+      margin-bottom: 15px;
+    }
+
+    .video-box {
+      background: #1a1d20;
+      border: 1px solid #2d3438;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 25px;
+    }
+
+    .video-box iframe {
+      width: 100%;
+      height: 500px;
+      border: none;
+      border-radius: 12px;
+      background: #000;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 12px 18px;
+      background: #6b8f71;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .card {
+      background: #1a1d20;
+      border: 1px solid #2d3438;
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #d7e4d2;
+    }
+
+    .process {
+      background: #141719;
+    }
+
+    footer {
+      padding: 30px 10%;
+      background: #090a0b;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    img {
+      max-width: 100%;
+      border-radius: 12px;
+      border: 1px solid #2d3438;
+      margin-top: 15px;
+    }
+
+    @media (max-width: 700px) {
+      header h1 {
+        font-size: 34px;
+      }
+
+      .video-box iframe {
+        height: 260px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>3D Parkour Movement Prototype</h1>
+    <p>
+      A 3D parkour game prototype made in Godot. The goal of this project was to create a playable movement prototype with running, jumping, sliding, wallrunning, ledge climbing and rope swinging.
+    </p>
+  </header>
+
+  <section>
+    <h2>Gameplay Showcase</h2>
+    <p>
+      This video shows the final prototype and how the main movement mechanics work inside the level.
+    </p>
+
+    <div class="video-box">
+      <!-- Replace this link with your video embed link if you have one -->
+      <iframe src="YOUR_GAMEPLAY_VIDEO_LINK_HERE" allowfullscreen></iframe>
+
+      <!-- Keep this button as a backup in case the embed does not work -->
+      <a class="button" href="YOUR_GAMEPLAY_VIDEO_LINK_HERE" target="_blank">
+        Watch gameplay video
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Project Overview</h2>
+    <p>
+      This project is a playable 3D parkour prototype. The focus was not to create a fully finished game, but to build a working prototype where different movement mechanics could be tested in one level.
+    </p>
+    <p>
+      The player moves through an overgrown city-style level and can use different parkour mechanics to complete the run. The level includes a timer and death triggers, so the player can try to finish the route faster.
+    </p>
+  </section>
+
+  <section>
+    <h2>Main Features</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Basic Movement</h3>
+        <p>Walking, running and jumping form the base of the player controller.</p>
+      </div>
+
+      <div class="card">
+        <h3>Advanced Movement</h3>
+        <p>The prototype includes crouching, sliding, double jumping, wallrunning and ledge climbing.</p>
+      </div>
+
+      <div class="card">
+        <h3>Rope Swinging</h3>
+        <p>I made experimental rope swinging mechanics to test how swinging could work in the game.</p>
+      </div>
+
+      <div class="card">
+        <h3>Timer & Death Triggers</h3>
+        <p>The level includes a timer and death triggers to make the prototype feel more like a playable run.</p>
+      </div>
+
+      <div class="card">
+        <h3>Camera & UI</h3>
+        <p>The game uses a third-person camera with a SpringArm and has a main menu and pause menu.</p>
+      </div>
+
+      <div class="card">
+        <h3>Sound Design</h3>
+        <p>I added footsteps, ambient sound and wind/speed sounds to make the movement feel more alive.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="process">
+    <h2>Tools Used</h2>
+    <p>
+      The game was made in <strong>Godot</strong>. I used <strong>Blender</strong> to create and animate the player model. I also used online tutorials, documentation, Reddit and AI support when I got stuck or needed extra explanation.
+    </p>
+  </section>
+
+  <section>
+    <h2>Development Process</h2>
+    <p>
+      I started by choosing a game engine and learning the basics of Godot. After that, I made a simple greybox test level where I could test movement mechanics without spending too much time on visuals.
+    </p>
+    <p>
+      I then added basic movement, camera control and more advanced mechanics like sliding, wallrunning and ledge climbing. Later, I created my own player model in Blender, rigged it, animated it and imported it into Godot.
+    </p>
+    <p>
+      Near the end of the project, I improved the level by adding assets, sound effects, a timer, death triggers and a more complete main menu.
+    </p>
+  </section>
+
+  <section>
+    <h2>What Could Be Improved</h2>
+    <p>
+      The prototype could still be improved by polishing the animations, cleaning up the player controller code and making the rope mechanic feel smoother. The level could also be made more consistent visually, but for this project the main focus was on creating a working movement prototype.
+    </p>
+  </section>
+
+  <section>
+    <h2>Project Links</h2>
+    <p>
+      The GitHub repository contains the project files and code.
+    </p>
+
+    <a class="button" href="YOUR_GITHUB_REPO_LINK_HERE" target="_blank">
+      View GitHub Repository
+    </a>
+  </section>
+
+  <footer>
+    <p>Made by Noud Craghs — Showcase Project</p>
+  </footer>
+
+</body>
+</html>
