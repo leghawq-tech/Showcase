@@ -2,6 +2,8 @@ extends Node3D
 
 @export var respawn_position: Vector3 = Vector3(0, 2, 0)
 
+signal player_died
+
 @onready var area: Area3D = $Area3D
 
 func _ready() -> void:
@@ -13,3 +15,5 @@ func _on_body_entered(body: Node3D) -> void:
 		
 		if body is CharacterBody3D:
 			body.velocity = Vector3.ZERO
+		
+		player_died.emit()

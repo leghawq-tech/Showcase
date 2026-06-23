@@ -11,12 +11,17 @@ config_version=5
 [application]
 
 config/name="Showcase project"
-run/main_scene="uid://rvn4gt350oc8"
+run/main_scene="res://Scenes/MainMenu.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 
 [display]
 
-window/stretch/mode="viewport"
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/mode=2
+window/size/window_width_override=1280
+window/size/window_height_override=720
+window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
 [input]

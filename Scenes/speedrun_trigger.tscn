@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://dmnbtdky6tdne"]
+
+[ext_resource type="Script" uid="uid://c74qfxs3hu72c" path="res://Scripts/speedrun_trigger.gd" id="1_onh3l"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5a3k4"]
+size = Vector3(10, 10, 1)
+
+[node name="SpeedrunTrigger" type="Node3D"]
+script = ExtResource("1_onh3l")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_5a3k4")

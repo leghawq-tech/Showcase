@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://70ag0377qkun"]
+
+[ext_resource type="PackedScene" uid="uid://dc4h0bd3738ng" path="res://anims+char+rig_half body.glb" id="1_jvjvs"]
+
+[node name="anims+char+rig_half body" unique_id=1953037312 instance=ExtResource("1_jvjvs")]

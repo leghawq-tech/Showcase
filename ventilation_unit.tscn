@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://loboh2m60mwp"]
+
+[ext_resource type="PackedScene" uid="uid://cq4bmln3vlv7w" path="res://fbx/ventilation unit.fbx" id="1_lqf2d"]
+[ext_resource type="Texture2D" uid="uid://o6fqfwnnhjbq" path="res://rusty_metal_04_diff_4k.jpg" id="2_in770"]
+[ext_resource type="Texture2D" uid="uid://xghd0fri8n1n" path="res://rusty_metal_04_nor_gl_4k.jpg" id="3_cjdxf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lqf2d"]
+albedo_texture = ExtResource("2_in770")
+normal_enabled = true
+normal_texture = ExtResource("3_cjdxf")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lqf2d"]
+size = Vector3(1.909668, 3.7363281, 8.520752)
+
+[node name="ventilation unit" unique_id=1977146445 instance=ExtResource("1_lqf2d")]
+
+[node name="ventilation unit" parent="." index="0" unique_id=1450053466]
+surface_material_override/0 = SubResource("StandardMaterial3D_lqf2d")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." index="1" unique_id=993032104]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" index="0" unique_id=716713663]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.045166016, 2.0760052, -0.095336914)
+shape = SubResource("BoxShape3D_lqf2d")

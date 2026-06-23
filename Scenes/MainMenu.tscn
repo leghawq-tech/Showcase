@@ -2,8 +2,6 @@
 
 [ext_resource type="Script" uid="uid://dtnqxx8jsxiul" path="res://Scripts/main_menu.gd" id="1_8sn4x"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8sn4x"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4jxv2"]
 bg_color = Color(0.15, 0.15, 0.2, 1)
 corner_radius_top_left = 8
@@ -18,7 +16,15 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
-[node name="MainMenu" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p5y1t"]
+bg_color = Color(0, 0, 0, 0.72)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="MainMenu" type="Control" unique_id=790439336]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -26,46 +32,274 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_8sn4x")
 
-[node name="ColorRect" type="ColorRect" parent="."]
-anchors_preset = 15
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2099687558]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.07, 0.07, 0.1, 1)
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1237136612]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=1031221887]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="CenterContainer/VBoxContainer" unique_id=1917123661]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Showcase Project"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="CenterContainer/VBoxContainer" unique_id=1623920348]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="StartGame" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1991869237]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_4jxv2")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2bbad")
+text = "Start Game"
+
+[node name="Settings" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1206990489]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_4jxv2")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2bbad")
+text = "Settings"
+
+[node name="HowToPlay" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1382517941]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_4jxv2")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2bbad")
+text = "How to Play"
+
+[node name="Quit" type="Button" parent="CenterContainer/VBoxContainer" unique_id=637568138]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_4jxv2")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2bbad")
+text = "Quit"
+
+[node name="SettingsPanel" type="Panel" parent="." unique_id=1799221295]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_p5y1t")
+
+[node name="CenterContainer" type="CenterContainer" parent="SettingsPanel" unique_id=1217692503]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SettingsPanel/CenterContainer" unique_id=560309896]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="SettingsTitle" type="Label" parent="SettingsPanel/CenterContainer/VBoxContainer" unique_id=1774233250]
+layout_mode = 2
+theme_override_font_sizes/font_size = 38
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="SettingsSpacer" type="Control" parent="SettingsPanel/CenterContainer/VBoxContainer" unique_id=1958407896]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="VolumeRow" type="HBoxContainer" parent="SettingsPanel/CenterContainer/VBoxContainer" unique_id=1567440878]
+layout_mode = 2
+
+[node name="VolumeLabel" type="Label" parent="SettingsPanel/CenterContainer/VBoxContainer/VolumeRow" unique_id=934787718]
+custom_minimum_size = Vector2(140, 36)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Master Volume"
+vertical_alignment = 1
+
+[node name="VolumeSlider" type="HSlider" parent="SettingsPanel/CenterContainer/VBoxContainer/VolumeRow" unique_id=1475715479]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+
+[node name="VolumeValue" type="Label" parent="SettingsPanel/CenterContainer/VBoxContainer/VolumeRow" unique_id=1575114172]
+custom_minimum_size = Vector2(50, 36)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "100%"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="FullscreenRow" type="HBoxContainer" parent="SettingsPanel/CenterContainer/VBoxContainer" unique_id=1268351217]
+layout_mode = 2
+
+[node name="FullscreenLabel" type="Label" parent="SettingsPanel/CenterContainer/VBoxContainer/FullscreenRow" unique_id=1529599737]
+custom_minimum_size = Vector2(140, 36)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Fullscreen"
+vertical_alignment = 1
+
+[node name="FullscreenCheck" type="CheckBox" parent="SettingsPanel/CenterContainer/VBoxContainer/FullscreenRow" unique_id=52522301]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FullscreenPad" type="Control" parent="SettingsPanel/CenterContainer/VBoxContainer/FullscreenRow" unique_id=2076565356]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+
+[node name="AspectRow" type="HBoxContainer" parent="SettingsPanel/CenterContainer/VBoxContainer" unique_id=1650220414]
+layout_mode = 2
+
+[node name="AspectLabel" type="Label" parent="SettingsPanel/CenterContainer/VBoxContainer/AspectRow" unique_id=887536942]
+custom_minimum_size = Vector2(140, 36)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Aspect Ratio"
+vertical_alignment = 1
+
+[node name="AspectOption" type="OptionButton" parent="SettingsPanel/CenterContainer/VBoxContainer/AspectRow" unique_id=506817033]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 0
+item_count = 3
+popup/item_0/text = "Keep"
+popup/item_0/id = 0
+popup/item_1/text = "Expand"
+popup/item_1/id = 1
+popup/item_2/text = "Ignore"
+popup/item_2/id = 2
+
+[node name="AspectPad" type="Control" parent="SettingsPanel/CenterContainer/VBoxContainer/AspectRow" unique_id=1356200949]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+
+[node name="ResolutionRow" type="HBoxContainer" parent="SettingsPanel/CenterContainer/VBoxContainer" unique_id=2079346288]
+layout_mode = 2
+
+[node name="ResolutionLabel" type="Label" parent="SettingsPanel/CenterContainer/VBoxContainer/ResolutionRow" unique_id=1565142743]
+custom_minimum_size = Vector2(140, 36)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Resolution"
+vertical_alignment = 1
+
+[node name="ResolutionOption" type="OptionButton" parent="SettingsPanel/CenterContainer/VBoxContainer/ResolutionRow" unique_id=604572051]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 2
+item_count = 5
+popup/item_0/text = "1280x720"
+popup/item_0/id = 0
+popup/item_1/text = "1366x768"
+popup/item_1/id = 1
+popup/item_2/text = "1920x1080"
+popup/item_2/id = 2
+popup/item_3/text = "2560x1440"
+popup/item_3/id = 3
+popup/item_4/text = "3840x2160"
+popup/item_4/id = 4
+
+[node name="ResolutionPad" type="Control" parent="SettingsPanel/CenterContainer/VBoxContainer/ResolutionRow" unique_id=1065530585]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+
+[node name="SettingsSpacer2" type="Control" parent="SettingsPanel/CenterContainer/VBoxContainer" unique_id=1245714820]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+
+[node name="SettingsBack" type="Button" parent="SettingsPanel/CenterContainer/VBoxContainer" unique_id=524013420]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_4jxv2")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2bbad")
+text = "Back"
+
+[node name="HowToPlayPanel" type="Panel" parent="." unique_id=2139884926]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_p5y1t")
+
+[node name="CenterContainer" type="CenterContainer" parent="HowToPlayPanel" unique_id=738723118]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(300, 0)
-theme_override_constants/separation = 16
+[node name="VBoxContainer" type="VBoxContainer" parent="HowToPlayPanel/CenterContainer" unique_id=1758072896]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+theme_override_constants/separation = 12
 
-[node name="Title" type="Label" parent="CenterContainer/VBoxContainer"]
-theme_override_font_sizes/font_size = 48
+[node name="HowToPlayTitle" type="Label" parent="HowToPlayPanel/CenterContainer/VBoxContainer" unique_id=2039289984]
+layout_mode = 2
+theme_override_font_sizes/font_size = 38
+text = "How to Play"
 horizontal_alignment = 1
-text = "Showcase Project"
 
-[node name="Spacer" type="Control" parent="CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 20)
+[node name="HowToPlaySpacer" type="Control" parent="HowToPlayPanel/CenterContainer/VBoxContainer" unique_id=518594254]
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
 
-[node name="StartGame" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="HowToPlayPanel/CenterContainer/VBoxContainer" unique_id=147828063]
+custom_minimum_size = Vector2(0, 420)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CardsContainer" type="VBoxContainer" parent="HowToPlayPanel/CenterContainer/VBoxContainer/ScrollContainer" unique_id=1914896002]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="HowToPlaySpacer2" type="Control" parent="HowToPlayPanel/CenterContainer/VBoxContainer" unique_id=200923327]
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
+
+[node name="HowToPlayBack" type="Button" parent="HowToPlayPanel/CenterContainer/VBoxContainer" unique_id=795392202]
 custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_4jxv2")
 theme_override_styles/hover = SubResource("StyleBoxFlat_2bbad")
-theme_override_font_sizes/font_size = 20
-text = "Start Game"
-
-[node name="Quit" type="Button" parent="CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
-theme_override_styles/normal = SubResource("StyleBoxFlat_4jxv2")
-theme_override_styles/hover = SubResource("StyleBoxFlat_2bbad")
-theme_override_font_sizes/font_size = 20
-text = "Quit"
+text = "Back"
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/StartGame" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/HowToPlay" to="." method="_on_how_to_play_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
+[connection signal="value_changed" from="SettingsPanel/CenterContainer/VBoxContainer/VolumeRow/VolumeSlider" to="." method="_on_volume_value_changed"]
+[connection signal="toggled" from="SettingsPanel/CenterContainer/VBoxContainer/FullscreenRow/FullscreenCheck" to="." method="_on_fullscreen_toggled"]
+[connection signal="item_selected" from="SettingsPanel/CenterContainer/VBoxContainer/AspectRow/AspectOption" to="." method="_on_aspect_ratio_selected"]
+[connection signal="item_selected" from="SettingsPanel/CenterContainer/VBoxContainer/ResolutionRow/ResolutionOption" to="." method="_on_resolution_selected"]
+[connection signal="pressed" from="SettingsPanel/CenterContainer/VBoxContainer/SettingsBack" to="." method="_on_settings_back_pressed"]
+[connection signal="pressed" from="HowToPlayPanel/CenterContainer/VBoxContainer/HowToPlayBack" to="." method="_on_how_to_play_back_pressed"]
